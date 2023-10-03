@@ -1,31 +1,4 @@
 ---
-# black,flake8 and yamllint are installed with brew on MacOS
-- name: install python black, flake8, yamllint with pip
-  pip:
-    state: latest
-    extra_args: --user
-    executable: pip3
-    name:
-      - black
-      - flake8
-      - yamllint
-  when:
-    - ansible_facts['os_family'] == 'Debian'
-
-- name: Set directory paths based on OS (Debian/Ubuntu)
-  set_fact:
-    home_dir: "{{ ansible_env['PWD'] }}"
-    local_username: "{{ ansible_env['USER'] }}"
-  when:
-    - ansible_facts['os_family'] == 'Debian'
-
-- name: Set directory paths based on OS (Darwin/MacOS)
-  set_fact:
-    home_dir: "{{ ansible_env['PWD'] }}"
-    local_username: "{{ ansible_user }}"
-  when:
-    - ansible_facts['os_family'] == 'Darwin'
-
 # to be removed; left in for testing purposes
 - name: ansible_user
   debug:
@@ -38,7 +11,7 @@
     state: directory
     path: "{{ home_dir }}/.config/yamllint"
     owner: "{{ local_username }}"
-    group: "{{ local_username }}"
+    group: "{{ local_usergroup }}"
     mode: "0775"
     force: true
   when:
@@ -50,7 +23,7 @@
     src: "config"
     dest: "{{ home_dir }}/.config/yamllint/config"
     owner: "{{ local_username }}"
-    group: "{{ local_username }}"
+    group: "{{ local_usergroup }}"
     mode: "0644"
     force: true
   when:
@@ -81,7 +54,7 @@
     vim -u NONE -c "helptags  {{ home_dir }}/.vim/pack/plugins/start/vimwiki/doc" -c quit
   when:
     - not vimwiki_help.stat.exists
-    - ansible_facts['os_family'] == 'Debian'
+    #- ansible_facts['os_family'] == 'Debian'
 
 - name: install indentLine plugin
   git:
@@ -99,7 +72,7 @@
     vim -u NONE -c "helptags  {{ home_dir }}/.vim/pack/vendor/start/indentLine/doc" -c quit
   when:
     - not indentLine_help.stat.exists
-    - ansible_facts['os_family'] == 'Debian'
+    #- ansible_facts['os_family'] == 'Debian'
 
 #- name: install Github CodePilot Plugin
 #  git:
@@ -127,7 +100,7 @@
     vim -u NONE -c "helptags  {{ home_dir }}/.vim/pack/tpope/start/commentary/doc" -c quit
   when:
     - not vim_commentary_help.stat.exists
-    - ansible_facts['os_family'] == 'Debian'
+    #- ansible_facts['os_family'] == 'Debian'
 
 - name: install Codeium plugin
   git:
@@ -147,6 +120,6 @@
     src: ".vimrc"
     dest: "{{ home_dir }}/.vimrc"
     owner: "{{ local_username }}"
-    #group: "{{ local_username }}"
-    mode: "0644"
+    group: "{{ local_usergroup }}"
+    mode: "0640"
     force: true
