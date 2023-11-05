@@ -114,7 +114,7 @@ nnoremap N Nzzzv
 "nmap <Leader>dj <Plug>VimspectorStepOver
 " }}}
 
-" Shell {{{
+" shell {{{
 autocmd FileType sh
     \ set tabstop=2 |
     \ set softtabstop=2 |
@@ -124,7 +124,7 @@ autocmd FileType sh
     \ set smarttab |
 " }}}
 
-" Markdown {{{
+" markdown {{{
 autocmd FileType markdown
     \ set tabstop=4 |
     \ set softtabstop=4 |
@@ -180,8 +180,6 @@ let g:vim_json_conceal=0
 " colours {{{
 syntax on                  " Vim5 and later versions support syntax highlighting.
 set background=dark        " Enable dark background within editing are and syntax highlighting
-"colorscheme pablo          " Set colorscheme
-"colorscheme gruvbox          " Set colorscheme
 "colorscheme molokai          " Set colorscheme
 "let g:molokai_original = 1
 colorscheme monokai          " Set colorscheme
@@ -211,6 +209,12 @@ hi Search ctermfg=DarkRed  " change cursor color to dark red when at the highlig
 " }}}
 
 " statusline {{{
+
+function! GitBranch()
+  let branch = substitute(system('git rev-parse --abbrev-ref HEAD 2>/dev/null'), '\n', '', '')
+  return strlen(branch) ? ' '.branch.' ' : ''
+endfunction
+
 " based on gnome-terminal, use XTerm colour palette
 "set fillchars+=vert:\ " change appearance of window split border
 hi VertSplit ctermfg=white guifg=white " change color of window split border
@@ -222,29 +226,38 @@ hi User4 ctermbg=darkmagenta ctermfg=white guibg=darkmagenta guifg=white
 hi User5 ctermbg=brown ctermfg=white guibg=brown guifg=white
 hi User6 ctermbg=lightblue ctermfg=black guibg=lightblue guifg=black
 hi User7 ctermbg=grey ctermfg=black guibg=grey guifg=black
+hi User8 ctermbg=black ctermfg=214 guibg=black guifg=#ffaf00
 hi User9 ctermbg=blue ctermfg=yellow guibg=blue guifg=yellow
 
-set laststatus=2                " always display status line
+set laststatus=2                   " always display status line
 set statusline=
 
+set statusline+=%1*                " set to User1 color
+set statusline+=\b:%n              " buffer number
+set statusline+=%2*                " set to User2 color
+set statusline+=%{expand('%:p:h')} " current working directory
+set statusline+=%7*                " set to User7 color
+set statusline+=\                  " add space separator
+set statusline+=%t                 " filename
+set statusline+=\                  " add space separator
+set statusline+=%3*                " set to User3 color
+set statusline+=\ft:\%y            " file type in [brackets]
 set statusline+=%1*
-set statusline+=\b:%n           " buffer number
-set statusline+=%2*
-set statusline+=\ %F            " file path and name
-set statusline+=\               " add space separator
-set statusline+=%3*
-set statusline+=\ft:\%y         " file type in [brackets]
-set statusline+=%9*             " reset color to default blue
+set statusline+=\{…\}%3{codeium#GetStatusString()} " codeium status
+set statusline+=%8*                " set to User8 color
+set statusline+=%{GitBranch()}
+set statusline+=%9*                " reset color to default blue
 
-set statusline+=\%=             " separator point left/right of items
+set statusline+=\%=                " separator point left/right of statusline
 
-set statusline+=\row:%l/%L      " line number / line total
+set statusline+=%7*                " set to User7 color
+set statusline+=\row:%l/%L         " line number / line total
 set statusline+=%4*
-set statusline+=\ col:%c        " column number
+set statusline+=\ col:%c           " column number
 set statusline+=%6*
-set statusline+=\ %p%%          " percentage through file
+set statusline+=\ %p%%             " percentage through file
 set statusline+=%5*
-set statusline+=\ h:%B          " value of char under cursor in hex
+set statusline+=\ h:%B             " value of char under cursor in hex
 " }}}
 
 " vimwiki {{{
@@ -254,6 +267,10 @@ let g:vimwiki_list = [{'path': '~/backup/git/wiki/',
                       \ 'syntax': 'default', 'ext': '.wiki',
                       \ 'links_space_char': '-'}]
 let g:vimwiki_global_ext = 0
+
+" disable tab for vimwiki filetypes, to allow autocompletion via codeium
+autocmd filetype vimwiki silent! iunmap <buffer> <Tab>
+
 " }}}
 
 " netrw {{{
@@ -297,8 +314,23 @@ nnoremap <Leader>c :Changes<cr>
 " }}}
 
 " vimgrep {{{
+" Add this line to your ~/.vimrc or _vimrc file
 nnoremap <leader>v :vim /
 
+" }}}
+
+" codeium {{{
+let g:codeium_disable_bindings = 1
+imap <script><silent><nowait><expr> <Tab> codeium#Accept()
+imap <C-n> <Cmd>call codeium#CycleCompletions(1)<CR>
+imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<CR>
+imap <C-x> <Cmd>call codeium#Clear()<CR>
+imap <C-a> <Cmd>call codeium#Complete()<CR>
+" }}}
+
+" nerdtree {{{
+" Add this line to your ~/.vimrc or _vimrc file
+nnoremap <f6> :NERDTreeToggle<cr>
 " }}}
 
 " folding {{{
