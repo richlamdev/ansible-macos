@@ -33,7 +33,6 @@ if has("autocmd")              " Jump to last position when reopening a file
 endif
 
 autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
-
 " }}}
 
 " file settings {{{
@@ -61,6 +60,7 @@ autocmd Filetype python
     \ set textwidth=0 |
     \ set smarttab |
     \ set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with |
+    \ let python_highlight_all=1 |
     "\ set wrap linebreak nolist |
 
 " highlight a marker at column 80
@@ -209,7 +209,6 @@ hi Search ctermfg=DarkRed  " change cursor color to dark red when at the highlig
 " }}}
 
 " statusline {{{
-
 function! GitBranch()
   let branch = substitute(system('git rev-parse --abbrev-ref HEAD 2>/dev/null'), '\n', '', '')
   return strlen(branch) ? ' '.branch.' ' : ''
@@ -228,6 +227,7 @@ hi User6 ctermbg=lightblue ctermfg=black guibg=lightblue guifg=black
 hi User7 ctermbg=grey ctermfg=black guibg=grey guifg=black
 hi User8 ctermbg=black ctermfg=214 guibg=black guifg=#ffaf00
 hi User9 ctermbg=blue ctermfg=yellow guibg=blue guifg=yellow
+hi StatusLineNC cterm=italic       " non active windows are italic
 
 set laststatus=2                   " always display status line
 set statusline=
@@ -235,15 +235,14 @@ set statusline=
 set statusline+=%1*                " set to User1 color
 set statusline+=\b:%n              " buffer number
 set statusline+=%2*                " set to User2 color
-set statusline+=%{expand('%:p:h')} " current working directory
-set statusline+=%7*                " set to User7 color
-set statusline+=\                  " add space separator
-set statusline+=%t                 " filename
+set statusline+=%{getcwd()}/       " current working directory (same as :pwd)
+set statusline+=%4*                " set to User4 color
+set statusline+=%f                 " current directory + file with respect to pwd
 set statusline+=\                  " add space separator
 set statusline+=%3*                " set to User3 color
 set statusline+=\ft:\%y            " file type in [brackets]
 set statusline+=%1*
-set statusline+=\{…\}%3{codeium#GetStatusString()} " codeium status
+set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
 set statusline+=%8*                " set to User8 color
 set statusline+=%{GitBranch()}
 set statusline+=%9*                " reset color to default blue
@@ -257,7 +256,7 @@ set statusline+=\ col:%c           " column number
 set statusline+=%6*
 set statusline+=\ %p%%             " percentage through file
 set statusline+=%5*
-set statusline+=\ h:%B             " value of char under cursor in hex
+set statusline+=\ hex:%B           " value of char under cursor in hex
 " }}}
 
 " vimwiki {{{
@@ -270,7 +269,6 @@ let g:vimwiki_global_ext = 0
 
 " disable tab for vimwiki filetypes, to allow autocompletion via codeium
 autocmd filetype vimwiki silent! iunmap <buffer> <Tab>
-
 " }}}
 
 " netrw {{{
@@ -286,7 +284,6 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_liststyle = 4
 "let g:netrw_winsize = 20
-
 " }}}
 
 " system clipboard {{{
@@ -316,7 +313,6 @@ nnoremap <Leader>c :Changes<cr>
 " vimgrep {{{
 " Add this line to your ~/.vimrc or _vimrc file
 nnoremap <leader>v :vim /
-
 " }}}
 
 " codeium {{{
@@ -328,7 +324,14 @@ imap <C-x> <Cmd>call codeium#Clear()<CR>
 imap <C-a> <Cmd>call codeium#Complete()<CR>
 " }}}
 
-" nerdtree {{{
+" testing {{{
+" 'cd' towards the directory in which the current file is edited
+" but only change the path for the current window
+nnoremap <leader>cd :lcd %:h<CR>
+
+" Open files located in the same dir in with the current file is edited
+nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<CR>
+
 " Add this line to your ~/.vimrc or _vimrc file
 nnoremap <f6> :NERDTreeToggle<cr>
 " }}}
