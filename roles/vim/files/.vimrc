@@ -25,8 +25,8 @@ set mouse=a                    " enable mouse for all modes
 set scrolloff=1                " set number of context lines visible above & below cursor
 set sidescrolloff=5            " make vertical scrolling appear more natural
 set noerrorbells               " disable beep on errors
-"set lines=45                  " set number of lines - do not use for console VIM
-"set columns=80                " set number of columns - do not use for console VIM
+set lazyredraw                 " don't redraw while executing macros
+set smoothscroll               " smooth scrolling
 
 if has("autocmd")              " Jump to last position when reopening a file
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -60,8 +60,6 @@ autocmd Filetype python
     \ set textwidth=0 |
     \ set smarttab |
     \ set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with |
-    \ let python_highlight_all=1 |
-    "\ set wrap linebreak nolist |
 
 " highlight a marker at column 80
 highlight ColorColumn ctermbg=red |
@@ -134,9 +132,20 @@ autocmd FileType markdown
     \ set smarttab |
 " }}}
 
-" ALE - Python {{{
+" yaml {{{
+autocmd FileType yaml
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set smarttab |
+" }}}
+
+" ALE {{{
 " https://github.com/dense-analysis/ale
-let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
+"let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
+let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'yaml': ['yamllint']}
 let g:ale_fixers = {'python': ['black']}
 "let g:ale_fixers = {'*': [], 'python': ['black']}
 let g:ale_python_flake8_options = '--max-line-length 79'
@@ -148,19 +157,8 @@ let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-" }}}
 
-" ALE - Yaml {{{
-" https://github.com/dense-analysis/ale
-autocmd FileType yaml
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set smarttab |
-
-set foldlevelstart=20
+"set foldlevelstart=20
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
@@ -272,8 +270,8 @@ autocmd filetype vimwiki silent! iunmap <buffer> <Tab>
 " }}}
 
 " netrw {{{
-inoremap <c-v> <Esc>:Lex<cr>:vertical resize 30<cr>
-nnoremap <c-v> <Esc>:Lex<cr>:vertical resize 30<cr>
+inoremap <c-s> <Esc>:Lex<cr>:vertical resize 30<cr>
+nnoremap <c-s> <Esc>:Lex<cr>:vertical resize 30<cr>
 
 " https://www.akhatib.com/making-netrw-clean-and-minimally-disruptive-then-stop-using-it/
 let g:netrw_banner = 0
