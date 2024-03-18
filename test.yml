@@ -53,8 +53,6 @@
       set_fact:
         user_primary_group: "{{ lookup('pipe', 'id -gn ' + ansible_env.SUDO_USER) }}"
 
-    - name: Displaye user's primary group name
+    - name: Display user's primary group name
       debug:
-        var: "{{ user_primary_group }}"
-
-
+        var: user_primary_group
