@@ -240,7 +240,7 @@ set statusline+=\                  " add space separator
 set statusline+=%3*                " set to User3 color
 set statusline+=\ft:\%y            " file type in [brackets]
 set statusline+=%1*
-set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
+"set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
 set statusline+=%8*                " set to User8 color
 set statusline+=%{GitBranch()}
 set statusline+=%9*                " reset color to default blue
@@ -344,8 +344,7 @@ nnoremap <Leader>t :!clear && echo "Working Directory:" && pwd && tree \| less<c
 
 " open vimrc / reload vimrc
 nnoremap ,v :edit   $MYVIMRC<CR>
-nnoremap ,u :source $MYVIMRC<CR>
-
+nnoremap ,u :source $MYVIMRC<CR> :edit $MYVIMRC<CR>
 " }}}
 
 " folding {{{
