@@ -48,6 +48,7 @@ export GODEBUG=asyncpreemptoff=1
 #alias sd="cd ~ && cd \$(find * -type d 2>/dev/null | fzf )"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
 export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border'
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
