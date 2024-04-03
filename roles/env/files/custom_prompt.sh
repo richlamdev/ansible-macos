@@ -69,7 +69,6 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 
 #function sd() { cd ~ && cd $(find * -type d 2>/dev/null | fzf) }
 
-
 # this function obtained from:
 # https://thevaluable.dev/practical-guide-fzf-example/
 function se {
@@ -79,19 +78,20 @@ function se {
         search_folder="$1"
     fi
 
-    find_params="-type d \( -name \"Library\" -o -name \"Music\" -o -name \"Movies\" \) -prune -o -print"
+    #find_params="-type d \( -name Library -o -name Music -o -name Movies \) -prune -o -print "
+    #selection=$(find "$search_folder" "$find_params" | fzf --multi --height=80% --border=sharp \
 
-    selection=$(find "$search_folder" $find_params | fzf --multi --height=80% --border=sharp \
+    selection=$(find "$search_folder" -type d \( -name "Library" -o -name "Music" -o -name "Movies" \) -prune -o -print | fzf --multi --height=80% --border=sharp \
         --preview='tree -C {}' --preview-window='50%,border-sharp' \
         --prompt='Dirs > ' \
         --bind='del:execute(rm -ri {+})' \
         --bind='ctrl-p:toggle-preview' \
         --bind='ctrl-d:change-prompt(Dirs > )' \
-        --bind="ctrl-d:+reload(find $search_folder $find_params)" \
+        --bind="ctrl-d:+reload(find $search_folder -type d \( -name \"Library\" -o -name \"Music\" -o -name \"Movies\" \) -prune -o -print )" \
         --bind='ctrl-d:+change-preview(tree -C {})' \
         --bind='ctrl-d:+refresh-preview' \
         --bind='ctrl-f:change-prompt(Files > )' \
-        --bind="ctrl-f:+reload(find $search_folder $find_params -type f -print)" \
+        --bind="ctrl-f:+reload(find $search_folder -type d \( -name \"Library\" -o -name \"Music\" -o -name \"Movies\" \) -prune -o -type f -print )" \
         --bind='ctrl-f:+change-preview(bat --color=always {})' \
         --bind='ctrl-f:+refresh-preview' \
         --bind='ctrl-a:select-all' \
