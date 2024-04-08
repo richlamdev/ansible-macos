@@ -21,10 +21,10 @@
     dest: "{{ home_dir }}/.vim/pack/git-plugins/start/ale"
 
 
-- name: install Codeium plugin
-  git:
-    repo: "https://github.com/Exafunction/codeium.vim"
-    dest: "{{ home_dir }}/.vim/pack/Exafunction/start/codeium.vim"
+# - name: install Codeium plugin
+#   git:
+#     repo: "https://github.com/Exafunction/codeium.vim"
+#     dest: "{{ home_dir }}/.vim/pack/Exafunction/start/codeium.vim"
 
 
 - name: install fzf plugin
