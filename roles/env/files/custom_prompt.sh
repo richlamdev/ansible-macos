@@ -61,6 +61,7 @@ export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 export PATH="${HOME}/bin:${PATH}"
 export GODEBUG=asyncpreemptoff=1
 alias lvl='echo "shell level: " $SHLVL'
+alias dateu='echo && date && date -u && echo'
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
