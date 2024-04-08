@@ -18,40 +18,58 @@ setopt PROMPT_SUBST
 
 PROMPT='%{$fg[blue]%}%n%{$reset_color%}@%{$fg[red]%}%m %{$fg[green]%}|${vcs_info_msg_0_}%{$fg[yellow]%}%~ %{$reset_color%}%% '
 
+export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=10000
-export HISTFILESIZE=10000
-export HISTCONTROL=ignoreboth
+export SAVEHIST=$HISTSIZE
+
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
 
 # default color scheme
 #export LSCOLORS=exfxcxdxbxegedabagacad
-
 export LS_OPTIONS='--color=always'
 export CLICOLOR=1
 export LSCOLORS=ExGxFxdxCxDxDxhbadExEx
-
 alias grep='grep --color=auto'
-alias k='kubectl'
-source <(kubectl completion zsh)
-
-complete -C '/usr/local/bin/aws_completer' aws
 
 autoload -U +X bashcompinit && bashcompinit
-#complete -o nospace -C /opt/homebrew/bin/terraform terraform
-complete -o nospace -C /Users/richardlam/bin/terraform terraform
 
+# kubectl
+alias k='kubectl'
+source <(kubectl completion zsh)
+alias kgs='f() { kubectl get secret $1 -o json | jq ".data | map_values(@base64d)" };f'
+
+# velero
+source <(velero completion zsh)
+alias v=velero
+complete -F __start_velero v
+
+# aws
+complete -C '/usr/local/bin/aws_completer' aws
+
+# terraform
+complete -o nospace -C /Users/richardlam/bin/terraform terraform
 
 export REPO_HOME=$HOME/Procurify
 export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 export PATH="${HOME}/bin:${PATH}"
 export GODEBUG=asyncpreemptoff=1
+alias lvl='echo "shell level: " $SHLVL'
 
-#alias sd="cd ~ && cd \$(find * -type d 2>/dev/null | fzf )"
-
+# fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border'
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
 export FZF_CTRL_T_OPTS="
+  --walker-skip .git,node_modules,target
   --preview 'bat -n --color=always {}'
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
@@ -65,9 +83,9 @@ export FZF_CTRL_R_OPTS="
   --header 'Press CTRL-Y to copy command into clipboard'"
 
 # Print tree structure in the preview window
-export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
-
-#function sd() { cd ~ && cd $(find * -type d 2>/dev/null | fzf) }
+export FZF_ALT_C_OPTS="
+  --walker-skip .git,node_modules,target
+  --preview 'tree -C {}'"
 
 # this function obtained from:
 # https://thevaluable.dev/practical-guide-fzf-example/
@@ -119,4 +137,3 @@ function pretty_csv {
     perl -pe 's/((?<=,)|(?<=^)),/ ,/g;' "$@" | column -t -s, | bat -S
 }
 
-alias lvl='echo "shell level: " $SHLVL'
