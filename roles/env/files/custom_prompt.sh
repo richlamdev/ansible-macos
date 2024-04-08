@@ -64,7 +64,11 @@ alias lvl='echo "shell level: " $SHLVL'
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+<<<<<<< HEAD
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+=======
+export FZF_DEFAULT_COMMAND='rg --files --ignore-vcs --hidden'
+>>>>>>> refs/remotes/origin/main
 export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border'
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
