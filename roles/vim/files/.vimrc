@@ -173,7 +173,7 @@ let g:indentLine_fileTypeExclude = ["vimwiki", "help", "json", "markdown"] "disa
 let g:indentLine_bufTypeExclude = ["vimwiki", "help", "json", "markdown"] "disable identline plugin (conceallevel) for specified filetypes
 let g:markdown_syntax_conceal=0
 let g:vim_json_conceal=0
-nnoremap <leader>id :IndentLinesToggle<CR>
+nnoremap <leader>i :IndentLinesToggle<CR>
 " }}}
 
 " colours {{{
