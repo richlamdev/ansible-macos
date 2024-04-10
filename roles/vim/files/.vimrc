@@ -146,23 +146,24 @@ autocmd FileType yaml
 " https://github.com/dense-analysis/ale
 "let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
 let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['tfsec']}
-let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'terraform': ['terraform'] }
+let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
 "let g:ale_fixers = {'*': [], 'python': ['black']}
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
+let g:ale_sh_shfmt_options = '-i 2 -ci'
+
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
-
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
 "set foldlevelstart=20
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 'never'
+
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 " }}}
 
 " indentLine {{{
@@ -173,7 +174,7 @@ let g:indentLine_fileTypeExclude = ["vimwiki", "help", "json", "markdown"] "disa
 let g:indentLine_bufTypeExclude = ["vimwiki", "help", "json", "markdown"] "disable identline plugin (conceallevel) for specified filetypes
 let g:markdown_syntax_conceal=0
 let g:vim_json_conceal=0
-nnoremap <leader>i :IndentLinesToggle<CR>
+nnoremap <leader>id :IndentLinesToggle<CR>
 " }}}
 
 " colours {{{
