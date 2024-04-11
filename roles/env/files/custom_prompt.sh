@@ -1,3 +1,13 @@
+# paths and aliases preferences
+export REPO_HOME=$HOME/Procurify
+export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
+export PATH="${HOME}/bin:${PATH}"
+export PATH="/Users/richardlam/Library/Python/3.11/bin:$PATH"
+export GODEBUG=asyncpreemptoff=1
+alias lvl='echo "shell level: " $SHLVL'
+alias dateu='echo && date && date -u && echo'
+alias idc='echo "k8s cluster: " && kubectl config get-contexts | awk "/\*/ {print \$2}" && aws sts get-caller-identity'
+
 # https://dev.to/cassidoo/customizing-my-zsh-prompt-3417
 # https://www.cyberciti.biz/faq/apple-mac-osx-terminal-color-ls-output-option/
 autoload -Uz colors
@@ -19,8 +29,10 @@ setopt PROMPT_SUBST
 PROMPT='%{$fg[blue]%}%n%{$reset_color%}@%{$fg[red]%}%m %{$fg[green]%}|${vcs_info_msg_0_}%{$fg[yellow]%}%~ %{$reset_color%}%% '
 
 export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=10000
+export HISTSIZE=50000
 export SAVEHIST=$HISTSIZE
+export HISTORY_IGNORE="(ls|cd|clear|pwd|exit|cd ..| cd../..)"
+export HIST_STAMPS=no
 
 setopt INC_APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
@@ -30,6 +42,7 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_SAVE_NO_DUPS
 setopt SHARE_HISTORY
+
 
 # default color scheme
 #export LSCOLORS=exfxcxdxbxegedabagacad
@@ -56,12 +69,6 @@ complete -C '/usr/local/bin/aws_completer' aws
 # terraform
 complete -o nospace -C /Users/richardlam/bin/terraform terraform
 
-export REPO_HOME=$HOME/Procurify
-export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
-export PATH="${HOME}/bin:${PATH}"
-export GODEBUG=asyncpreemptoff=1
-alias lvl='echo "shell level: " $SHLVL'
-alias dateu='echo && date && date -u && echo'
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
