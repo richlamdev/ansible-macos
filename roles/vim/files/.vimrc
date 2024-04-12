@@ -321,16 +321,24 @@ nnoremap <leader>v :execute "vimgrep /" . expand("<cword>") . "/gj **" <Bar> cw<
 " }}}
 
 " codeium {{{
-let g:codeium_disable_bindings = 1
-imap <script><silent><nowait><expr> <Tab> codeium#Accept()
-imap <C-n> <Cmd>call codeium#CycleCompletions(1)<CR>
-imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<CR>
-imap <C-x> <Cmd>call codeium#Clear()<CR>
-imap <C-a> <Cmd>call codeium#Complete()<CR>
+" let g:codeium_disable_bindings = 1
+" imap <script><silent><nowait><expr> <Tab> codeium#Accept()
+" imap <C-n> <Cmd>call codeium#CycleCompletions(1)<CR>
+" imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<CR>
+" imap <C-x> <Cmd>call codeium#Clear()<CR>
+" imap <C-a> <Cmd>call codeium#Complete()<CR>
 " }}}
 
 " nerdtree {{{
 nnoremap <leader>n :NERDTreeToggle<cr>
+" }}}
+
+" copilot {{{
+" make these the same as codeium
+inoremap <C-n> <Plug>(copilot-next)
+inoremap <C-p> <Plug>(copilot-previous)
+inoremap <C-x> <Plug>(copilot-dismiss)
+inoremap <C-a> <Plug>(copilot-suggest)
 " }}}
 
 " testing {{{
