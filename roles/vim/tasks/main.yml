@@ -33,10 +33,10 @@
     dest: "{{ home_dir }}/.vim/bundle/fzf.vim"
 
 
-#- name: install Github CodePilot Plugin
-#  git:
-#    repo: "https://github.com/github/copilot.vim.git"
-#    dest: "/home/{{ local_user }}/.vim/pack/github/start/copilot.vim"
+- name: install Github CodePilot Plugin
+  git:
+    repo: "https://github.com/github/copilot.vim.git"
+    dest: "{{ home_dir }}/.vim/pack/github/start/copilot.vim"
 
 
 - name: install hashivim plugin
