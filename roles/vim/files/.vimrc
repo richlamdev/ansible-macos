@@ -293,7 +293,7 @@ let g:netrw_liststyle = 4
 " }}}
 
 " system clipboard {{{
-vnoremap <c-y> <esc>:'<,'>w !xclip -selection clipboard<cr><cr>
+vnoremap <c-y> "+y
 " }}}
 
 " fzf {{{
