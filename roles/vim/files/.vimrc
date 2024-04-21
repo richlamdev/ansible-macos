@@ -294,6 +294,7 @@ let g:netrw_liststyle = 4
 
 " system clipboard {{{
 vnoremap <c-y> "+y
+set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
@@ -304,6 +305,9 @@ set runtimepath+=~/.vim/bundle/fzf.vim
 " list when using :Ag :Rg :Lines
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all --layout=reverse --height 90% --border'
 
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
 let g:fzf_preview_window = ['right,50%', 'ctrl-/']
 "nnoremap <c-p> :Files<cr>
 nnoremap <Leader>f :Files<cr>
@@ -313,7 +317,8 @@ nnoremap <Leader>w :Windows<cr>
 nnoremap <Leader>j :Jumps<cr>
 nnoremap <Leader>r :Rg<cr>
 nnoremap <Leader>a :Ag<cr>
-nnoremap <Leader>m :Marks<cr>
+nnoremap <Leader>mk :Marks<cr>
+nnoremap <Leader>ma :Maps<cr>
 nnoremap <Leader>c :Changes<cr>
 nnoremap <Leader>l :Lines<cr>
 " }}}
