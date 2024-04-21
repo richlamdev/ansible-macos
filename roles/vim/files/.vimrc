@@ -69,24 +69,24 @@ call matchadd('ColorColumn', '\%80v', 100)
 autocmd BufNewFile,BufRead requirements*.txt set ft=python
 
 " map f9 to excute python script
-" nnoremap <buffer> <F9> :w<CR> :exec '!python3' shellescape(@%, 1)<CR>
+" nnoremap <buffer> <F9> :w<cr> :exec '!python3' shellescape(@%, 1)<cr>
 " }}}
 
 " window management {{{
-nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 6/5)<CR>
-nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 5/6)<CR>
-nnoremap <silent> <Leader>< :exe "vert resize " . (winwidth(0) * 5/6)<CR>
-nnoremap <silent> <Leader>> :exe "vert resize " . (winwidth(0) * 6/5)<CR>
+nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 6/5)<cr>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 5/6)<cr>
+nnoremap <silent> <Leader>< :exe "vert resize " . (winwidth(0) * 5/6)<cr>
+nnoremap <silent> <Leader>> :exe "vert resize " . (winwidth(0) * 6/5)<cr>
 
 autocmd VimResized * wincmd = " Auto-resize splits when Vim gets resized.
 set splitright splitbelow     " open splits to the right and below
 " }}}
 
 " visual moving text {{{
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-inoremap <C-j> :m .+1<CR>==
-inoremap <C-k> :m .-2<CR>==
+vnoremap J :m '>+1<cr>gv=gv
+vnoremap K :m '<-2<cr>gv=gv
+inoremap <C-j> :m .+1<cr>==
+inoremap <C-k> :m .-2<cr>==
 " }}}
 
 " search settings {{{
@@ -110,11 +110,11 @@ nnoremap N Nzzzv
 
 " vimspector settings {{{
 " let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
-"nnoremap <Leader>dd :call vimspector#Launch()<CR>
-"nnoremap <Leader>de :call vimspector#Reset()<CR>
-"nnoremap <Leader>dc :call vimspector#Continue()<CR>
-"nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
-"nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+"nnoremap <Leader>dd :call vimspector#Launch()<cr>
+"nnoremap <Leader>de :call vimspector#Reset()<cr>
+"nnoremap <Leader>dc :call vimspector#Continue()<cr>
+"nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<cr>
+"nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<cr>
 "nmap <Leader>dk <Plug>VimspectorRestart
 "nmap <Leader>dh <Plug>VimspectorStepOut
 "nmap <Leader>dl <Plug>VimspectorStepInto
@@ -183,7 +183,7 @@ let g:indentLine_fileTypeExclude = ["vimwiki", "help", "json", "markdown"] "disa
 let g:indentLine_bufTypeExclude = ["vimwiki", "help", "json", "markdown"] "disable identline plugin (conceallevel) for specified filetypes
 let g:markdown_syntax_conceal=0
 let g:vim_json_conceal=0
-nnoremap <leader>id :IndentLinesToggle<CR>
+nnoremap <leader>id :IndentLinesToggle<cr>
 " }}}
 
 " colours {{{
@@ -326,22 +326,26 @@ nnoremap <Leader>l :Lines<cr>
 " vimgrep {{{
 " slightly quicker method to execute vimgrep
 " nnoremap <leader>v :vim /
-"map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
-nnoremap <leader>v :execute "vimgrep /" . expand("<cword>") . "/gj **" <Bar> cw<CR>
+"map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<cr>
+nnoremap <leader>v :execute "vimgrep /" . expand("<cword>") . "/gj **" <Bar> cw<cr>
 
 " }}}
 
 " codeium {{{
 " let g:codeium_disable_bindings = 1
 " imap <script><silent><nowait><expr> <Tab> codeium#Accept()
-" imap <C-n> <Cmd>call codeium#CycleCompletions(1)<CR>
-" imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<CR>
-" imap <C-x> <Cmd>call codeium#Clear()<CR>
-" imap <C-a> <Cmd>call codeium#Complete()<CR>
+" imap <C-n> <Cmd>call codeium#CycleCompletions(1)<cr>
+" imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<cr>
+" imap <C-x> <Cmd>call codeium#Clear()<cr>
+" imap <C-a> <Cmd>call codeium#Complete()<cr>
 " }}}
 
 " nerdtree {{{
 nnoremap <leader>n :NERDTreeToggle<cr>
+" }}}
+
+" tagbar {{{
+nnoremap <Leader>tb :TagbarToggle<cr>
 " }}}
 
 " copilot {{{
@@ -355,17 +359,19 @@ inoremap <C-a> <Plug>(copilot-suggest)
 " testing {{{
 " 'cd' towards the directory in which the current file is edited
 " but only change the path for the current window
-nnoremap <leader>cd :lcd %:h<CR>
+nnoremap <leader>cd :lcd %:h<cr>
 
 " Open files located in the same dir in with the current file is edited
-nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<CR>
+nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<cr>
 
 " tree view from current working directory
-nnoremap <Leader>t :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
+nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
+" }}}
 
+" vimrc {{{
 " open vimrc / reload vimrc
-nnoremap ,v :edit   $MYVIMRC<CR>
-nnoremap ,u :source $MYVIMRC<CR> :edit $MYVIMRC<CR>
+nnoremap ,v :edit   $MYVIMRC<cr>
+nnoremap ,u :source $MYVIMRC<cr> :edit $MYVIMRC<cr>
 " }}}
 
 " folding {{{
