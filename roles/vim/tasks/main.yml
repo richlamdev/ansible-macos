@@ -62,6 +62,24 @@
     - not indentLine_help.stat.exists
 
 
+- name: create {{ home_dir }}/.vim/after/syntax directory
+  file:
+    state: directory
+    path: "{{ home_dir }}/.vim/after/syntax"
+    owner: "{{ local_user }}"
+    group: "{{ local_user_primary_group }}"
+    mode: "0770"
+
+- name: install markdown syntax override # remove red highlighting of underscore
+  copy:
+    src: "markdown.vim"
+    dest: "{{ home_dir }}/.vim/after/syntax/markdown.vim"
+    owner: "{{ local_user }}"
+    group: "{{ local_user_primary_group }}"
+    mode: "0640"
+    force: true
+
+
 - name: install monokai colorscheme
   git:
     repo: "https://github.com/sickill/vim-monokai.git"
