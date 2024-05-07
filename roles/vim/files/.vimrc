@@ -20,7 +20,7 @@ set encoding=utf-8             " UTF8 Support
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set nu                         " set numbered lines for columns
 set list                       " show all whitespace a character
-set listchars=tab:▸\ ,trail:·,nbsp:␣   " set characters displayed for tab/space
+set listchars=tab:▸\ ,trail:·  " set characters displayed for tab/space
 set mouse=a                    " enable mouse for all modes
 set scrolloff=1                " set number of context lines visible above & below cursor
 set sidescrolloff=5            " make vertical scrolling appear more natural
@@ -43,14 +43,13 @@ set nobackup               " do not keep a backup file, use versions instead
 " file find {{{
 set path=.,**              " relative to current file and everything under :pwd
 set wildmenu               " display matches in command-line mode
-set wildmode=full          " first tab complete as much as possible
 set wildignore+=.pyc,.swp  " ignore these files when opening based on glob pattern
-set wildignorecase         " ignore case when completing file names
 set hidden                 " hide buffers when they are abandoned
 " }}}
 
 " Python PEP8 {{{
 " To add the proper PEP8 indentation, add the following to your .vimrc:
+"autocmd BufNewFile,BufRead *.py
 autocmd Filetype python
     \ set tabstop=4 |
     \ set softtabstop=4 |
@@ -70,28 +69,24 @@ call matchadd('ColorColumn', '\%80v', 100)
 autocmd BufNewFile,BufRead requirements*.txt set ft=python
 
 " map f9 to excute python script
-" nnoremap <buffer> <F9> :w<CR> :exec '!python3' shellescape(@%, 1)<CR>
+" nnoremap <buffer> <F9> :w<cr> :exec '!python3' shellescape(@%, 1)<cr>
 " }}}
 
 " window management {{{
-nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 6/5)<CR>
-nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 5/6)<CR>
-nnoremap <silent> <Leader>< :exe "vert resize " . (winwidth(0) * 5/6)<CR>
-nnoremap <silent> <Leader>> :exe "vert resize " . (winwidth(0) * 6/5)<CR>
+nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 6/5)<cr>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 5/6)<cr>
+nnoremap <silent> <Leader>< :exe "vert resize " . (winwidth(0) * 5/6)<cr>
+nnoremap <silent> <Leader>> :exe "vert resize " . (winwidth(0) * 6/5)<cr>
 
 autocmd VimResized * wincmd = " Auto-resize splits when Vim gets resized.
 set splitright splitbelow     " open splits to the right and below
 " }}}
 
 " visual moving text {{{
-" https://vimrcfu.com/snippet/77
-" visual mode moving lines of text
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-" insert mode moving line of text
-inoremap <C-j> <Esc>:m .+1<CR>==gi
-inoremap <C-k> <Esc>:m .-2<CR>==gi
+vnoremap J :m '>+1<cr>gv=gv
+vnoremap K :m '<-2<cr>gv=gv
+inoremap <C-j> :m .+1<cr>==
+inoremap <C-k> :m .-2<cr>==
 " }}}
 
 " search settings {{{
@@ -105,6 +100,9 @@ highlight Search cterm=none ctermbg=green ctermfg=black
 highlight CursorColumn guibg=blue guifg=red
 highlight CursorColumn ctermbg=red ctermfg=blue
 
+"hi Search ctermbg=Yellow   " highlight seached word in yellow
+"hi Search ctermfg=DarkRed  " change cursor color to dark red when at the highlighted word
+
 " keep search centered
 nnoremap n nzzzv
 nnoremap N Nzzzv
@@ -112,11 +110,11 @@ nnoremap N Nzzzv
 
 " vimspector settings {{{
 " let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
-"nnoremap <Leader>dd :call vimspector#Launch()<CR>
-"nnoremap <Leader>de :call vimspector#Reset()<CR>
-"nnoremap <Leader>dc :call vimspector#Continue()<CR>
-"nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
-"nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+"nnoremap <Leader>dd :call vimspector#Launch()<cr>
+"nnoremap <Leader>de :call vimspector#Reset()<cr>
+"nnoremap <Leader>dc :call vimspector#Continue()<cr>
+"nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<cr>
+"nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<cr>
 "nmap <Leader>dk <Plug>VimspectorRestart
 "nmap <Leader>dh <Plug>VimspectorStepOut
 "nmap <Leader>dl <Plug>VimspectorStepInto
@@ -155,8 +153,9 @@ autocmd FileType yaml
 
 " ALE {{{
 " https://github.com/dense-analysis/ale
-let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint']}
-let g:ale_fixers = {'python': ['black'], 'sh': ['shfmt']}
+"let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
+let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['tfsec']}
+let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
 "let g:ale_fixers = {'*': [], 'python': ['black']}
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
@@ -184,17 +183,35 @@ let g:indentLine_fileTypeExclude = ["vimwiki", "help", "json", "markdown"] "disa
 let g:indentLine_bufTypeExclude = ["vimwiki", "help", "json", "markdown"] "disable identline plugin (conceallevel) for specified filetypes
 let g:markdown_syntax_conceal=0
 let g:vim_json_conceal=0
-nnoremap <Leader>i :IndentLinesToggle<cr>
+nnoremap <leader>id :IndentLinesToggle<cr>
 " }}}
 
 " colours {{{
 syntax on                  " Vim5 and later versions support syntax highlighting.
 set background=dark        " Enable dark background within editing are and syntax highlighting
-set termguicolors
-
 "colorscheme molokai          " Set colorscheme
 "let g:molokai_original = 1
 colorscheme monokai          " Set colorscheme
+
+" set termguicolors
+
+" test color scheme
+" :call DisplayColorSchemes()  -to view all colors
+
+"function! DisplayColorSchemes()
+   "let currDir = getcwd()
+   "exec "cd $VIMRUNTIME/colors"
+   "for myCol in split(glob("*"), '\n')
+      "if myCol =~ '\.vim'
+         "let mycol = substitute(myCol, '\.vim', '', '')
+         "exec "colorscheme " . mycol
+         "exec "redraw!"
+         "echo "colorscheme = ". myCol
+         "sleep 2
+      "endif
+   "endfor
+   "exec "cd " . currDir
+"endfunction
 " }}}
 
 " statusline {{{
@@ -231,7 +248,7 @@ set statusline+=\                  " add space separator
 set statusline+=%3*                " set to User3 color
 set statusline+=\ft:\%y            " file type in [brackets]
 set statusline+=%1*
-set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
+"set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
 set statusline+=%8*                " set to User8 color
 set statusline+=%{GitBranch()}
 set statusline+=%9*                " reset color to default blue
@@ -249,7 +266,6 @@ set statusline+=\ hex:%B           " value of char under cursor in hex
 " }}}
 
 " vimwiki {{{
-" https://github.com/vimwiki/vimwiki
 filetype plugin on
 autocmd BufNewFile,BufReadPost,BufAdd *.wiki set filetype=vimwiki
 let g:vimwiki_list = [{'path': '~/backup/git/wiki/',
@@ -277,24 +293,23 @@ let g:netrw_liststyle = 4
 " }}}
 
 " system clipboard {{{
-"vnoremap <c-y> <esc>:'<,'>w !xclip -selection clipboard<cr><cr>
-"above is unnecessary if clipboard support is compiled with vim,
-"check with :echo has('clipboard') "return 0 = not compiled in, return 1 compiled in)
 vnoremap <c-y> "+y
-
-set clipboard^=unnamed,unnamedplus "make vim use system clipboard
+set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
-set runtimepath+=~/.fzf,~/.vim/bundle/fzf.vim
+set runtimepath+=~/.fzf
+set runtimepath+=~/.vim/bundle/fzf.vim
 
-" CTRL-A and CTRL-D to populate quickfix list when using :Ag :Rg :Lines
+" for MacOS and Ubuntu - if you need CTRL-A and CTRL-D to populate quickfix
+" list when using :Ag :Rg :Lines
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all --layout=reverse --height 90% --border'
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
 let g:fzf_preview_window = ['right,50%', 'ctrl-/']
+"nnoremap <c-p> :Files<cr>
 nnoremap <Leader>f :Files<cr>
 nnoremap <Leader>b :Buffers<cr>
 nnoremap <Leader>s :BLines<cr>
@@ -308,26 +323,21 @@ nnoremap <Leader>c :Changes<cr>
 nnoremap <Leader>l :Lines<cr>
 " }}}
 
-" vimgrep & grep {{{
-" use :Vim <search_term>
-command! -nargs=+ Vim execute "silent vimgrep! /<args>/gj ##" | copen | execute 'silent /<args>' | redraw!
-nnoremap <silent> <leader>v :Vim <c-r>=expand("<cword>")<cr><cr>
+" vimgrep {{{
+" slightly quicker method to execute vimgrep
+" nnoremap <leader>v :vim /
+"map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<cr>
+nnoremap <leader>v :execute "vimgrep /" . expand("<cword>") . "/gj **" <Bar> cw<cr>
 
-" modified from: https://chase-seibert.github.io/blog/2013/09/21/vim-grep-under-cursor.html
-" use :Grep <search_term>
-command! -nargs=+ Grep execute 'silent grep! -I -i -r -n --exclude=\*.pyc --exclude-dir=.git ## -e <args>' | copen | execute 'silent /<args>' | redraw!
-":nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
-nnoremap <silent> <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 " }}}
 
 " codeium {{{
-" https://github.com/Exafunction/codeium.vim
-let g:codeium_disable_bindings = 1
-imap <script><silent><nowait><expr> <Tab> codeium#Accept()
-imap <C-n> <Cmd>call codeium#CycleCompletions(1)<CR>
-imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<CR>
-imap <C-x> <Cmd>call codeium#Clear()<CR>
-imap <C-a> <Cmd>call codeium#Complete()<CR>
+" let g:codeium_disable_bindings = 1
+" imap <script><silent><nowait><expr> <Tab> codeium#Accept()
+" imap <C-n> <Cmd>call codeium#CycleCompletions(1)<cr>
+" imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<cr>
+" imap <C-x> <Cmd>call codeium#Clear()<cr>
+" imap <C-a> <Cmd>call codeium#Complete()<cr>
 " }}}
 
 " nerdtree {{{
@@ -338,13 +348,21 @@ nnoremap <leader>n :NERDTreeToggle<cr>
 nnoremap <Leader>tb :TagbarToggle<cr>
 " }}}
 
+" copilot {{{
+" make these the same as codeium
+inoremap <C-n> <Plug>(copilot-next)
+inoremap <C-p> <Plug>(copilot-previous)
+inoremap <C-x> <Plug>(copilot-dismiss)
+inoremap <C-a> <Plug>(copilot-suggest)
+" }}}
+
 " testing {{{
 " 'cd' towards the directory in which the current file is edited
 " but only change the path for the current window
-nnoremap <leader>cd :lcd %:h<CR>
+nnoremap <leader>cd :lcd %:h<cr>
 
 " Open files located in the same dir in with the current file is edited
-nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<CR>
+nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<cr>
 
 " tree view from current working directory
 nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
@@ -354,21 +372,6 @@ nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<
 " open vimrc / reload vimrc
 nnoremap ,v :edit   $MYVIMRC<cr>
 nnoremap ,u :source $MYVIMRC<cr> :edit $MYVIMRC<cr>
-" }}}
-
-" Damn (sudo save) {{{
-" Define custom command with optional bang
-command! -nargs=0 -bang Damn :call SaveWithSudo(<bang>0)
-
-function! SaveWithSudo(bang)
-    if a:bang
-        let filename = expand('%:p') " Get full path of current file
-        silent execute 'w !sudo tee > /dev/null ' . shellescape(filename)
-        echohl WarningMsg | echo 'Saved ' . filename . ' with sudo' | echohl None
-    else
-        w
-    endif
-endfunction
 " }}}
 
 " folding {{{
