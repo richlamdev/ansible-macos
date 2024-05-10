@@ -20,7 +20,7 @@ set encoding=utf-8             " UTF8 Support
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set nu                         " set numbered lines for columns
 set list                       " show all whitespace a character
-set listchars=tab:▸\ ,trail:·  " set characters displayed for tab/space
+set listchars=tab:▸\ ,trail:·,nbsp:␣   " set characters displayed for tab/space
 set mouse=a                    " enable mouse for all modes
 set scrolloff=1                " set number of context lines visible above & below cursor
 set sidescrolloff=5            " make vertical scrolling appear more natural
@@ -83,10 +83,14 @@ set splitright splitbelow     " open splits to the right and below
 " }}}
 
 " visual moving text {{{
-vnoremap J :m '>+1<cr>gv=gv
-vnoremap K :m '<-2<cr>gv=gv
-inoremap <C-j> :m .+1<cr>==
-inoremap <C-k> :m .-2<cr>==
+" https://vimrcfu.com/snippet/77
+" visual mode moving lines of text
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" insert mode moving line of text
+inoremap <C-j> <Esc>:m .+1<CR>==gi
+inoremap <C-k> <Esc>:m .-2<CR>==gi
 " }}}
 
 " search settings {{{
@@ -99,9 +103,6 @@ highlight Search guibg=purple guifg='NONE'
 highlight Search cterm=none ctermbg=green ctermfg=black
 highlight CursorColumn guibg=blue guifg=red
 highlight CursorColumn ctermbg=red ctermfg=blue
-
-"hi Search ctermbg=Yellow   " highlight seached word in yellow
-"hi Search ctermfg=DarkRed  " change cursor color to dark red when at the highlighted word
 
 " keep search centered
 nnoremap n nzzzv
@@ -189,29 +190,11 @@ nnoremap <leader>id :IndentLinesToggle<cr>
 " colours {{{
 syntax on                  " Vim5 and later versions support syntax highlighting.
 set background=dark        " Enable dark background within editing are and syntax highlighting
+" set termguicolors
+
 "colorscheme molokai          " Set colorscheme
 "let g:molokai_original = 1
 colorscheme monokai          " Set colorscheme
-
-" set termguicolors
-
-" test color scheme
-" :call DisplayColorSchemes()  -to view all colors
-
-"function! DisplayColorSchemes()
-   "let currDir = getcwd()
-   "exec "cd $VIMRUNTIME/colors"
-   "for myCol in split(glob("*"), '\n')
-      "if myCol =~ '\.vim'
-         "let mycol = substitute(myCol, '\.vim', '', '')
-         "exec "colorscheme " . mycol
-         "exec "redraw!"
-         "echo "colorscheme = ". myCol
-         "sleep 2
-      "endif
-   "endfor
-   "exec "cd " . currDir
-"endfunction
 " }}}
 
 " statusline {{{
@@ -298,11 +281,9 @@ set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
-set runtimepath+=~/.fzf
-set runtimepath+=~/.vim/bundle/fzf.vim
+set runtimepath+=~/.fzf,~/.vim/bundle/fzf.vim
 
-" for MacOS and Ubuntu - if you need CTRL-A and CTRL-D to populate quickfix
-" list when using :Ag :Rg :Lines
+" CTRL-A and CTRL-D to populate quickfix list when using :Ag :Rg :Lines
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all,ctrl-d:deselect-all --layout=reverse --height 90% --border'
 
 " [Buffers] Jump to the existing window if possible
@@ -323,12 +304,16 @@ nnoremap <Leader>c :Changes<cr>
 nnoremap <Leader>l :Lines<cr>
 " }}}
 
-" vimgrep {{{
-" slightly quicker method to execute vimgrep
-" nnoremap <leader>v :vim /
-"map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<cr>
-nnoremap <leader>v :execute "vimgrep /" . expand("<cword>") . "/gj **" <Bar> cw<cr>
+" vimgrep & grep{{{
+" use :Vim <search_term>
+command! -nargs=+ Vim execute "silent vimgrep! /<args>/gj ##" | copen | execute 'silent /<args>' | redraw!
+nnoremap <silent> <leader>v :Vim <c-r>=expand("<cword>")<cr><cr>
 
+" modified from: https://chase-seibert.github.io/blog/2013/09/21/vim-grep-under-cursor.html
+" use :Grep <search_term>
+command! -nargs=+ Grep execute 'silent grep! -I -i -r -n --exclude=\*.pyc --exclude-dir=.git ## -e <args>' | copen | execute 'silent /<args>' | redraw!
+":nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+nnoremap <silent> <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 " }}}
 
 " codeium {{{
@@ -372,6 +357,11 @@ nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<
 " open vimrc / reload vimrc
 nnoremap ,v :edit   $MYVIMRC<cr>
 nnoremap ,u :source $MYVIMRC<cr> :edit $MYVIMRC<cr>
+" }}}
+
+" sudo write {{{
+" Save a file with sudo (sw => sudo write)
+noremap <leader>sw :w !sudo tee % > /dev/null<CR>
 " }}}
 
 " folding {{{
