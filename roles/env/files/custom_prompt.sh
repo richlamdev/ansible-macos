@@ -74,7 +74,12 @@ complete -o nospace -C /Users/richardlam/bin/terraform terraform
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS='--height 80% --layout=reverse --border'
+export FZF_DEFAULT_OPTS="
+  --height 80%
+  --layout reverse
+  --multi
+  --border
+  --highlight-line --color gutter:-1,selected-bg:238,selected-fg:146,current-fg:189"
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
 export FZF_CTRL_T_OPTS="
@@ -89,7 +94,10 @@ export FZF_CTRL_R_OPTS="
   --bind 'ctrl-/:toggle-preview'
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
   --color header:italic
-  --header 'Press CTRL-Y to copy command into clipboard'"
+  --header '
+  Press CTRL-P: toggle preview
+  Press CTRL-Y to copy command into clipboard
+  '"
 
 # Print tree structure in the preview window
 export FZF_ALT_C_OPTS="
@@ -109,7 +117,7 @@ function se {
     #selection=$(find "$search_folder" "$find_params" | fzf --multi --height=80% --border=sharp \
 
     selection=$(find "$search_folder" -type d \( -name "Library" -o -name "Music" -o -name "Movies" \) -prune -o -print | fzf --multi --height=80% --border=sharp \
-        --preview='tree -C {}' --preview-window='50%,border-sharp' \
+        --preview='tree -C {}' --preview-window='50%' \
         --prompt='Dirs > ' \
         --bind='del:execute(rm -ri {+})' \
         --bind='ctrl-p:toggle-preview' \
@@ -124,8 +132,9 @@ function se {
         --bind='ctrl-a:select-all' \
         --bind='ctrl-x:deselect-all' \
         --header '
-        CTRL-D to display directories | CTRL-F to display files
-        CTRL-A to select all | CTRL-x to deselect all
+        CTRL-D to display directories
+        CTRL-F to display files
+        CTRL-A/CTRL-X to select/deselect all
         ENTER to edit | DEL to delete
         CTRL-P to toggle preview
         ')
