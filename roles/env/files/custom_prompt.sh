@@ -7,7 +7,13 @@ export GODEBUG=asyncpreemptoff=1
 alias lvl='echo "shell level: " $SHLVL'
 alias dateu='echo && date && date -u && echo'
 alias idc='echo "k8s cluster: " && kubectl config get-contexts | awk "/\*/ {print \$2}" && aws sts get-caller-identity'
-alias google='function _google() { open "https://www.google.com/search?q=$*"; }; _google'
+alias google='_google'
+
+function _google() {
+    local encoded_query
+    encoded_query=$(printf "%s" "$*" | jq -sRr @uri)
+    open "https://www.google.com/search?q=${encoded_query}"
+}
 
 # https://dev.to/cassidoo/customizing-my-zsh-prompt-3417
 # https://www.cyberciti.biz/faq/apple-mac-osx-terminal-color-ls-output-option/

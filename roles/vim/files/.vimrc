@@ -277,7 +277,7 @@ let g:netrw_liststyle = 4
 
 " system clipboard {{{
 vnoremap <c-y> "+y
-set clipboard^=unnamed,unnamedplus
+" set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
