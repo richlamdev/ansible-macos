@@ -95,9 +95,9 @@ export FZF_CTRL_R_OPTS="
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
   --color header:italic
   --header '
-  Press CTRL-P: toggle preview
-  Press CTRL-Y to copy command into clipboard
-  '"
+Press CTRL-P: toggle preview
+Press CTRL-Y to copy command into clipboard
+'"
 
 # Print tree structure in the preview window
 export FZF_ALT_C_OPTS="
@@ -131,13 +131,14 @@ function se {
         --bind='ctrl-f:+refresh-preview' \
         --bind='ctrl-a:select-all' \
         --bind='ctrl-x:deselect-all' \
+        --color header:italic \
         --header '
-        CTRL-D to display directories
-        CTRL-F to display files
-        CTRL-A/CTRL-X to select/deselect all
-        ENTER to edit | DEL to delete
-        CTRL-P to toggle preview
-        ')
+CTRL-D to display directories
+CTRL-F to display files
+CTRL-A/CTRL-X to select/deselect all
+ENTER to edit | DEL to delete
+CTRL-P to toggle preview
+')
 
     if [ -d "$selection" ]; then
         cd "$selection" || return
