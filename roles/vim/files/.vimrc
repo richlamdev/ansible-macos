@@ -277,7 +277,7 @@ let g:netrw_liststyle = 4
 
 " system clipboard {{{
 vnoremap <c-y> "+y
-" set clipboard^=unnamed,unnamedplus
+"set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
@@ -339,6 +339,7 @@ inoremap <C-n> <Plug>(copilot-next)
 inoremap <C-p> <Plug>(copilot-previous)
 inoremap <C-x> <Plug>(copilot-dismiss)
 inoremap <C-a> <Plug>(copilot-suggest)
+nnoremap <Leader>p :Copilot panel<cr>
 " }}}
 
 " testing {{{
