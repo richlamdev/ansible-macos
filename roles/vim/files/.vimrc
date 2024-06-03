@@ -12,6 +12,7 @@ set ttyfast                    " Make the keyboard fast
 "set timeout timeoutlen=1000 ttimeoutlen=50
 set showmode                   " always show what mode we're currently editing in
 set showcmd                    " Show (partial) command in status line.
+set report=1                   " provide more information about changes
 set showmatch                  " Show matching brackets.
 set history=2500               " keep 2500 lines of command line history
 set ruler                      " show the cursor position all the time
