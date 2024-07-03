@@ -56,4 +56,3 @@
     - name: Display user's primary group name
       debug:
         var: user_primary_group
-## Test signing
