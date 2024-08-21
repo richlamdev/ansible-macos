@@ -379,6 +379,62 @@ endfunction
 command! -nargs=0 Reg call Reg()
 " }}}
 
+function! ShowYamlHierarchy()
+    let l:line = line('.')
+    let l:hierarchy = []
+    let l:indent = -1
+    let l:next_is_list = 0
+
+    while l:line > 0
+        let l:current_line = getline(l:line)
+
+        " Skip empty lines and comments
+        if empty(l:current_line) || l:current_line =~ '^\s*#'
+            let l:line -= 1
+            continue
+        endif
+
+        " Check if the current line is a list item (-)
+        if match(l:current_line, '^\s*-\s') >= 0
+            let l:current_indent = indent(l:line)
+            " Ensure that we handle the list item properly
+            if l:next_is_list
+                if !empty(l:hierarchy) && l:hierarchy[-1] !~ '\[\]$'
+                    let l:hierarchy[-1] .= '[]'
+                endif
+            endif
+            " Set flag to handle next line as a list item
+            let l:next_is_list = 0
+            let l:line -= 1
+            continue
+        endif
+
+        " Match lines with key-value pairs (key: value)
+        if match(l:current_line, '^\s*[^#]*\ze\s*:') >= 0
+            let l:key = matchstr(l:current_line, '^\s*\zs[^:]*\ze:')
+            let l:current_indent = indent(l:line)
+
+            " Only add to the hierarchy if it's at a higher level
+            if l:indent == -1 || l:current_indent < l:indent
+                call add(l:hierarchy, l:key)
+                let l:indent = l:current_indent
+                " Set flag to check if the next line is a list item
+                let l:next_is_list = 1
+            endif
+        endif
+
+        let l:line -= 1
+    endwhile
+
+    " Join the hierarchy and display it
+    let l:hierarchy_string = join(reverse(l:hierarchy), ' > ')
+    echomsg l:hierarchy_string
+endfunction
+
+" Trigger the function when moving the cursor
+autocmd CursorMoved * call ShowYamlHierarchy()
+
+
 " folding {{{
 set foldmethod=syntax
 set foldlevelstart=1
