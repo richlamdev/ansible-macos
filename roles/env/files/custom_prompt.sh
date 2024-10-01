@@ -74,7 +74,8 @@ complete -F __start_velero v
 complete -C '/usr/local/bin/aws_completer' aws
 
 # terraform
-complete -o nospace -C /Users/richardlam/bin/terraform terraform
+#complete -o nospace -C /Users/richardlam/bin/terraform terraform
+complete -o nospace -C /opt/homebrew/bin/terraform
 
 
 # fzf configuration
