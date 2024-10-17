@@ -151,13 +151,14 @@ autocmd FileType yaml
     \ set expandtab |
     \ set autoindent |
     \ set smarttab |
+    "\ colorscheme molokai-dark
 " }}}
 
 " ALE {{{
 " https://github.com/dense-analysis/ale
 "let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
-let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['terraform'] }
-let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'yaml': ['yamlfmt'], 'terraform': ['terraform'] }
+let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['terraform']}
+let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
 "let g:ale_fixers = {'*': [], 'python': ['black']}
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
@@ -188,14 +189,10 @@ let g:vim_json_conceal=0
 nnoremap <leader>id :IndentLinesToggle<cr>
 " }}}
 
-" colours {{{
+" screen settings {{{
 syntax on                  " Vim5 and later versions support syntax highlighting.
 set background=dark        " Enable dark background within editing are and syntax highlighting
 " set termguicolors
-
-"colorscheme molokai          " Set colorscheme
-"let g:molokai_original = 1
-colorscheme monokai          " Set colorscheme
 " }}}
 
 " statusline {{{
@@ -204,49 +201,51 @@ function! GitBranch()
   return strlen(branch) ? ' '.branch.' ' : ''
 endfunction
 
-" based on gnome-terminal, use XTerm colour palette
-"set fillchars+=vert:\ " change appearance of window split border
-hi VertSplit ctermfg=white guifg=white " change color of window split border
+function! SetStatusLine()
+    " based on gnome-terminal, use XTerm colour palette
+    "set fillchars+=vert:\ " change appearance of window split border
+    hi VertSplit ctermfg=white guifg=white " change color of window split border
 
-hi User1 ctermbg=red ctermfg=white guibg=red guifg=white
-hi User2 ctermbg=214 ctermfg=black guibg=#ffaf00 guifg=black "DarkOrange
-hi User3 ctermbg=yellow ctermfg=black guibg=yellow guifg=black
-hi User4 ctermbg=darkmagenta ctermfg=white guibg=darkmagenta guifg=white
-hi User5 ctermbg=brown ctermfg=white guibg=brown guifg=white
-hi User6 ctermbg=lightblue ctermfg=black guibg=lightblue guifg=black
-hi User7 ctermbg=grey ctermfg=black guibg=grey guifg=black
-hi User8 ctermbg=black ctermfg=214 guibg=black guifg=#ffaf00
-hi User9 ctermbg=blue ctermfg=yellow guibg=blue guifg=yellow
-hi StatusLineNC cterm=italic       " non active windows are italic
+    hi User1 ctermbg=red ctermfg=white guibg=red guifg=white
+    hi User2 ctermbg=214 ctermfg=black guibg=#ffaf00 guifg=black "DarkOrange
+    hi User3 ctermbg=yellow ctermfg=black guibg=yellow guifg=black
+    hi User4 ctermbg=darkmagenta ctermfg=white guibg=darkmagenta guifg=white
+    hi User5 ctermbg=brown ctermfg=white guibg=brown guifg=white
+    hi User6 ctermbg=lightblue ctermfg=black guibg=lightblue guifg=black
+    hi User7 ctermbg=grey ctermfg=black guibg=grey guifg=black
+    hi User8 ctermbg=black ctermfg=214 guibg=black guifg=#ffaf00
+    hi User9 ctermbg=blue ctermfg=yellow guibg=blue guifg=yellow
+    hi StatusLineNC cterm=italic       " non active windows are italic
 
-set laststatus=2                   " always display status line
-set statusline=
+    set laststatus=2                   " always display status line
+    set statusline=
 
-set statusline+=%1*                " set to User1 color
-set statusline+=\b:%n              " buffer number
-set statusline+=%2*                " set to User2 color
-set statusline+=%{getcwd()}/       " current working directory (same as :pwd)
-set statusline+=%4*                " set to User4 color
-set statusline+=%f                 " current directory + file with respect to pwd
-set statusline+=\                  " add space separator
-set statusline+=%3*                " set to User3 color
-set statusline+=\ft:\%y            " file type in [brackets]
-set statusline+=%1*
-"set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
-set statusline+=%8*                " set to User8 color
-set statusline+=%{GitBranch()}
-set statusline+=%9*                " reset color to default blue
+    set statusline+=%1*                " set to User1 color
+    set statusline+=\b:%n              " buffer number
+    set statusline+=%2*                " set to User2 color
+    set statusline+=%{getcwd()}/       " current working directory (same as :pwd)
+    set statusline+=%4*                " set to User4 color
+    set statusline+=%f                 " current directory + file with respect to pwd
+    set statusline+=\                  " add space separator
+    set statusline+=%3*                " set to User3 color
+    set statusline+=\ft:\%y            " file type in [brackets]
+    set statusline+=%1*
+    "set statusline+=\{…\}%3{codeium#GetStatusString()}  " codeium status
+    set statusline+=%8*                " set to User8 color
+    set statusline+=%{GitBranch()}
+    set statusline+=%9*                " reset color to default blue
 
-set statusline+=\%=                " separator point left/right of statusline
+    set statusline+=\%=                " separator point left/right of statusline
 
-set statusline+=%7*                " set to User7 color
-set statusline+=\row:%l/%L         " line number / line total
-set statusline+=%4*
-set statusline+=\ col:%c           " column number
-set statusline+=%6*
-set statusline+=\ %p%%             " percentage through file
-set statusline+=%5*
-set statusline+=\ hex:%B           " value of char under cursor in hex
+    set statusline+=%7*                " set to User7 color
+    set statusline+=\row:%l/%L         " line number / line total
+    set statusline+=%4*
+    set statusline+=\ col:%c           " column number
+    set statusline+=%6*
+    set statusline+=\ %p%%             " percentage through file
+    set statusline+=%5*
+    set statusline+=\ hex:%B           " value of char under cursor in hex
+endfunction
 " }}}
 
 " vimwiki {{{
@@ -379,61 +378,18 @@ endfunction
 command! -nargs=0 Reg call Reg()
 " }}}
 
-function! ShowYamlHierarchy()
-    let l:line = line('.')
-    let l:hierarchy = []
-    let l:indent = -1
-    let l:next_is_list = 0
+" startup {{{
+"colorscheme molokai              " Set colorscheme
+"let g:molokai_original = 1
+colorscheme molokai-dark          " Set colorscheme
+call SetStatusLine()
 
-    while l:line > 0
-        let l:current_line = getline(l:line)
+" Reapply the status line whenever the buffer or window changes
+autocmd BufEnter,WinEnter * call SetStatusLine()
 
-        " Skip empty lines and comments
-        if empty(l:current_line) || l:current_line =~ '^\s*#'
-            let l:line -= 1
-            continue
-        endif
-
-        " Check if the current line is a list item (-)
-        if match(l:current_line, '^\s*-\s') >= 0
-            let l:current_indent = indent(l:line)
-            " Ensure that we handle the list item properly
-            if l:next_is_list
-                if !empty(l:hierarchy) && l:hierarchy[-1] !~ '\[\]$'
-                    let l:hierarchy[-1] .= '[]'
-                endif
-            endif
-            " Set flag to handle next line as a list item
-            let l:next_is_list = 0
-            let l:line -= 1
-            continue
-        endif
-
-        " Match lines with key-value pairs (key: value)
-        if match(l:current_line, '^\s*[^#]*\ze\s*:') >= 0
-            let l:key = matchstr(l:current_line, '^\s*\zs[^:]*\ze:')
-            let l:current_indent = indent(l:line)
-
-            " Only add to the hierarchy if it's at a higher level
-            if l:indent == -1 || l:current_indent < l:indent
-                call add(l:hierarchy, l:key)
-                let l:indent = l:current_indent
-                " Set flag to check if the next line is a list item
-                let l:next_is_list = 1
-            endif
-        endif
-
-        let l:line -= 1
-    endwhile
-
-    " Join the hierarchy and display it
-    let l:hierarchy_string = join(reverse(l:hierarchy), ' > ')
-    echomsg l:hierarchy_string
-endfunction
-
-" Trigger the function when moving the cursor
-autocmd CursorMoved * call ShowYamlHierarchy()
-
+" Reapply status line when the color scheme changes
+autocmd ColorScheme * call SetStatusLine()
+" }}}
 
 " folding {{{
 set foldmethod=syntax
