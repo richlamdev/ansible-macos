@@ -3,6 +3,8 @@ export REPO_HOME=$HOME/Procurify
 export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 export PATH="${HOME}/bin:${PATH}"
 export PATH="/Users/richardlam/Library/Python/3.11/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export DOCKER_HOST=unix://Users//$USER/.docker/run/docker.sock
 export GODEBUG=asyncpreemptoff=1
 alias lvl='echo "shell level: " $SHLVL'
 alias dateu='echo && date && date -u && echo'
@@ -71,12 +73,11 @@ alias v=velero
 complete -F __start_velero v
 
 # aws
-complete -C '/usr/local/bin/aws_completer' aws
+#complete -C '/usr/local/bin/aws_completer' aws
 
 # terraform
 #complete -o nospace -C /Users/richardlam/bin/terraform terraform
 complete -o nospace -C /opt/homebrew/bin/terraform
-
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
