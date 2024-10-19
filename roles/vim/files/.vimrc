@@ -32,13 +32,12 @@ set smoothscroll               " smooth scrolling
 if has("autocmd")              " Jump to last position when reopening a file
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
-
-autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
 " }}}
 
 " file settings {{{
 set autowrite              " Automatically save before commands like :next and :make
 set nobackup               " do not keep a backup file, use versions instead
+autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
 " }}}
 
 " file find {{{
@@ -49,18 +48,17 @@ set hidden                 " hide buffers when they are abandoned
 " }}}
 
 " Python PEP8 {{{
-" To add the proper PEP8 indentation, add the following to your .vimrc:
 "autocmd BufNewFile,BufRead *.py
 autocmd Filetype python
-    \ set tabstop=4 |
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set fileformat=unix |
-    \ set textwidth=0 |
-    \ set smarttab |
-    \ set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with,async,await,match,case |
+    \ setlocal tabstop=4 |
+    \ setlocal softtabstop=4 |
+    \ setlocal shiftwidth=4 |
+    \ setlocal expandtab |
+    \ setlocal autoindent |
+    \ setlocal fileformat=unix |
+    \ setlocal textwidth=0 |
+    \ setlocal smarttab |
+    \ setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with,async,await,match,case |
 
 " highlight a marker at column 80
 highlight ColorColumn ctermbg=red |
@@ -123,43 +121,34 @@ nnoremap N Nzzzv
 "nmap <Leader>dj <Plug>VimspectorStepOver
 " }}}
 
-" shell {{{
-autocmd FileType sh
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set smarttab |
+" shell yaml {{{
+autocmd FileType sh,yaml
+    \ setlocal tabstop=2 |
+    \ setlocal softtabstop=2 |
+    \ setlocal shiftwidth=2 |
+    \ setlocal expandtab |
+    \ setlocal autoindent |
+    \ setlocal smartindent |
+    \ setlocal smarttab |
+    "\ setlocallocal colorscheme molokai
 " }}}
 
-" markdown {{{
-autocmd FileType markdown
-    \ set tabstop=4 |
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set smarttab |
-" }}}
-
-" yaml {{{
-autocmd FileType yaml
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set smarttab |
-    "\ colorscheme molokai-dark
+" markdown json {{{
+autocmd FileType markdown,json
+    \ setlocal tabstop=4 |
+    \ setlocal softtabstop=4 |
+    \ setlocal shiftwidth=4 |
+    \ setlocal expandtab |
+    \ setlocal autoindent |
+    \ setlocal smartindent |
+    \ setlocal smarttab |
+    \ setlocal foldmethod=manual |
 " }}}
 
 " ALE {{{
 " https://github.com/dense-analysis/ale
-"let g:ale_linters = {'python': ['flake8'], 'yaml': ['yamllint']}
 let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['terraform']}
 let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
-"let g:ale_fixers = {'*': [], 'python': ['black']}
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_sh_shfmt_options = '-i 2 -ci'
@@ -168,7 +157,6 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
-"set foldlevelstart=20
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
@@ -260,24 +248,8 @@ let g:vimwiki_global_ext = 0
 autocmd filetype vimwiki silent! iunmap <buffer> <Tab>
 " }}}
 
-" netrw {{{
-"inoremap <c-s> <Esc>:Lex<cr>:vertical resize 30<cr>
-"nnoremap <c-s> <Esc>:Lex<cr>:vertical resize 30<cr>
-
-" https://www.akhatib.com/making-netrw-clean-and-minimally-disruptive-then-stop-using-it/
-let g:netrw_banner = 0
-"let g:netrw_list_hide = '^\.\.\=/\=$,.DS_Store,.idea,.git,__pycache__,venv,node_modules,*\.o,*\.pyc,.*\.swp'
-let g:netrw_list_hide = '^\.\=/\=$,.DS_Store,.idea,.git,__pycache__,venv,node_modules,*\.o,*\.pyc,.*\.swp'
-let g:netrw_hide = 1
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_liststyle = 4
-"let g:netrw_winsize = 20
-" }}}
-
 " system clipboard {{{
 vnoremap <c-y> "+y
-"set clipboard^=unnamed,unnamedplus
 " }}}
 
 " fzf {{{
@@ -313,15 +285,6 @@ nnoremap <silent> <leader>v :Vim <c-r>=expand("<cWORD>")<cr><cr>
 " use :Grep <search_term>
 command! -nargs=+ Grep execute 'silent grep! -I -i -r -n --exclude=\*.pyc --exclude-dir=.git ## -e <args>' | copen | execute 'silent /<args>' | redraw!
 nnoremap <silent> <leader>g :Grep <c-r>=expand("<cWORD>")<cr><cr>
-" }}}
-
-" codeium {{{
-" let g:codeium_disable_bindings = 1
-" imap <script><silent><nowait><expr> <Tab> codeium#Accept()
-" imap <C-n> <Cmd>call codeium#CycleCompletions(1)<cr>
-" imap <C-p> <Cmd>call codeium#CycleCompletions(-1)<cr>
-" imap <C-x> <Cmd>call codeium#Clear()<cr>
-" imap <C-a> <Cmd>call codeium#Complete()<cr>
 " }}}
 
 " nerdtree {{{
