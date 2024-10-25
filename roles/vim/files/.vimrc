@@ -6,28 +6,33 @@
 " debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
 " options, so any other options should be set AFTER setting 'compatible'.
 set nocompatible
-set title                      " set title of window
-set titlestring=VIM:\ \ %-25.55F\ %a%r%m titlelen=70
-set ttyfast                    " Make the keyboard fast
+set title                             " set title of window
+"set titlestring=VIM:\ \ %-25.55F\ %a%r%m titlelen=70
+set titlestring=\ \ [PWD:\ %{getcwd()}]\ \ %F\ %a%r%m titlelen=80
+set ttyfast                           " Make the keyboard fast
 "set timeout timeoutlen=1000 ttimeoutlen=50
-set showmode                   " always show what mode we're currently editing in
-set showcmd                    " Show (partial) command in status line.
-set report=1                   " provide more information about changes
-set showmatch                  " Show matching brackets.
-set history=2500               " keep 2500 lines of command line history
-set ruler                      " show the cursor position all the time
-set nowrap                     " NO WRAPPING OF THE LINES! (except for Python, see below)
-set encoding=utf-8             " UTF8 Support
-set backspace=indent,eol,start " allow backspacing over everything in insert mode
-set nu                         " set numbered lines for columns
-set list                       " show all whitespace a character
-set listchars=tab:▸\ ,trail:·,nbsp:␣   " set characters displayed for tab/space
-set mouse=a                    " enable mouse for all modes
-set scrolloff=1                " set number of context lines visible above & below cursor
-set sidescrolloff=5            " make vertical scrolling appear more natural
-set noerrorbells               " disable beep on errors
-set lazyredraw                 " don't redraw while executing macros
-set smoothscroll               " smooth scrolling
+set showmode                          " always show what mode we're currently editing in
+set showcmd                           " Show (partial) command in status line.
+set report=1                          " provide more information about changes
+set showmatch                         " Show matching brackets.
+set history=2500                      " keep 2500 lines of command line history
+set ruler                             " show the cursor position all the time
+set nowrap                            " NO WRAPPING OF THE LINES! (except for Python, see below)
+set encoding=utf-8                    " UTF8 Support
+set backspace=indent,eol,start        " allow backspacing over everything in insert mode
+set number                            " set numbered lines for columns
+set list                              " show all whitespace a character
+set listchars=tab:▸\ ,trail:·,nbsp:␣  " set characters displayed for tab/space
+set mouse=a                           " enable mouse for all modes
+set scrolloff=1                       " set number of context lines visible above & below cursor
+set sidescrolloff=5                   " make vertical scrolling appear more natural
+set noerrorbells                      " disable beep on errors
+set lazyredraw                        " don't redraw while executing macros
+set smoothscroll                      " smooth scrolling
+set updatetime=300                    " set updatetime to 300ms
+set background=dark                   " enable dark background within editing
+"set termguicolors                     " enable true colors
+syntax on                             " enable syntax highlighting.
 
 if has("autocmd")              " Jump to last position when reopening a file
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -48,7 +53,6 @@ set hidden                 " hide buffers when they are abandoned
 " }}}
 
 " Python PEP8 {{{
-"autocmd BufNewFile,BufRead *.py
 autocmd Filetype python
     \ setlocal tabstop=4 |
     \ setlocal softtabstop=4 |
@@ -97,6 +101,7 @@ set ignorecase                " case insensitive matching
 set smartcase                 " smart case matching
 set incsearch                 " show search matches while typing
 set hlsearch                  " highlight all matches after search
+set matchtime=5               " time in tenths of a second to show matching
 
 highlight Search guibg=purple guifg='NONE'
 highlight Search cterm=none ctermbg=green ctermfg=black
@@ -106,6 +111,8 @@ highlight CursorColumn ctermbg=red ctermfg=blue
 " keep search centered
 nnoremap n nzzzv
 nnoremap N Nzzzv
+nnoremap * *zzzv
+nnoremap # #zzzv
 " }}}
 
 " vimspector settings {{{
@@ -122,7 +129,7 @@ nnoremap N Nzzzv
 " }}}
 
 " shell yaml {{{
-autocmd FileType sh,yaml
+autocmd FileType sh,yaml,vim
     \ setlocal tabstop=2 |
     \ setlocal softtabstop=2 |
     \ setlocal shiftwidth=2 |
@@ -161,6 +168,9 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_text_changed = 'never'
+
+" don't worry about long line length for yaml
+let g:ale_yaml_yamllint_options = '-d "{extends: relaxed, rules: {line-length: {max: disable}}"'
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
@@ -211,9 +221,9 @@ function! SetStatusLine()
     set statusline+=%1*                " set to User1 color
     set statusline+=\b:%n              " buffer number
     set statusline+=%2*                " set to User2 color
-    set statusline+=%{getcwd()}/       " current working directory (same as :pwd)
+    "set statusline+=%{getcwd()}/       " current working directory (same as :pwd)
     set statusline+=%4*                " set to User4 color
-    set statusline+=%f                 " current directory + file with respect to pwd
+    "set statusline+=%f                 " current directory + file with respect to pwd
     set statusline+=\                  " add space separator
     set statusline+=%3*                " set to User3 color
     set statusline+=\ft:\%y            " file type in [brackets]
@@ -289,6 +299,15 @@ nnoremap <silent> <leader>g :Grep <c-r>=expand("<cWORD>")<cr><cr>
 
 " nerdtree {{{
 nnoremap <leader>n :NERDTreeToggle<cr>
+
+let NERDShutUp = 1
+let NERDTreeHijackNetrw=1
+let NERDTreeQuitOnOpen=1               " quit NERDTree after openning a file
+let NERDChristmasTree = 1              " colored NERD Tree
+let NERDTreeHighlightCursorline = 1
+let NERDTreeShowHidden = 1
+" let NERDTreeMapActivateNode='<CR>'   " map enter to activating a node
+let NERDTreeIgnore=['\.git','\.DS_Store','\.pdf', '\.pyc$']
 " }}}
 
 " tagbar {{{
@@ -342,10 +361,11 @@ command! -nargs=0 Reg call Reg()
 " }}}
 
 " startup {{{
-"colorscheme molokai              " Set colorscheme
-"let g:molokai_original = 1
-colorscheme molokai-dark          " Set colorscheme
+" https://github.com/pR0Ps/molokai-dark
+colorscheme molokai-dark
 call SetStatusLine()
+"let g:molokai_original = 1
+"colorscheme molokai
 
 " Reapply the status line whenever the buffer or window changes
 autocmd BufEnter,WinEnter * call SetStatusLine()
