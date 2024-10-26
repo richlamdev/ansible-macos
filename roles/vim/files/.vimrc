@@ -154,7 +154,7 @@ autocmd FileType markdown,json
 
 " ALE {{{
 " https://github.com/dense-analysis/ale
-let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['terraform']}
+let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['trivy']}
 let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
@@ -171,6 +171,18 @@ let g:ale_lint_on_text_changed = 'never'
 
 " don't worry about long line length for yaml
 let g:ale_yaml_yamllint_options = '-d "{extends: relaxed, rules: {line-length: {max: disable}}"'
+
+let g:ale_terraform_trivy_executable = 'trivy'
+let g:ale_terraform_trivy_options = 'config --exit-code 0'
+let g:ale_terraform_trivy_use_global = 1
+let g:ale_terraform_trivy_linter = {
+    \ 'name': 'trivy',
+    \ 'executable': 'trivy',
+    \ 'command': 'trivy config --exit-code 0 -f json -o /dev/stdout %t',
+    \ 'callback': 'ale#handlers#json#Handle',
+    \ 'output_stream': 'both',
+    \ 'language': 'terraform',
+    \ }
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
