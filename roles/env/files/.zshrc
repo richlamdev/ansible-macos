@@ -1,5 +1,9 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Created by `pipx` on 2024-10-24 21:57:28
+export PATH="$PATH:/Users/richardlam/.local/bin"
 # paths and aliases preferences
-export REPO_HOME=$HOME/Procurify
+export REPO_HOME=$HOME/procurify
 export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 export PATH="${HOME}/bin:${PATH}"
 export PATH="/Users/richardlam/Library/Python/3.11/bin:$PATH"
@@ -76,8 +80,7 @@ complete -F __start_velero v
 #complete -C '/usr/local/bin/aws_completer' aws
 
 # terraform
-#complete -o nospace -C /Users/richardlam/bin/terraform terraform
-complete -o nospace -C /opt/homebrew/bin/terraform
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -163,4 +166,5 @@ CTRL-P to toggle preview
 function pretty_csv {
     perl -pe 's/((?<=,)|(?<=^)),/ ,/g;' "$@" | column -t -s, | bat -S
 }
+
 
