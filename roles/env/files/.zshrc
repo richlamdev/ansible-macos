@@ -14,6 +14,10 @@ alias lvl='echo "shell level: " $SHLVL'
 alias dateu='echo && date && date -u && echo'
 alias idc='echo "k8s cluster: " && kubectl config get-contexts | awk "/\*/ {print \$2}" && aws sts get-caller-identity'
 alias google='_google'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 function _google() {
     local encoded_query
