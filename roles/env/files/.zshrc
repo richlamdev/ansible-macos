@@ -3,21 +3,24 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Created by `pipx` on 2024-10-24 21:57:28
 export PATH="$PATH:/Users/richardlam/.local/bin"
 # paths and aliases preferences
-export REPO_HOME=$HOME/procurify
 export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 export PATH="${HOME}/bin:${PATH}"
-export PATH="/Users/richardlam/Library/Python/3.11/bin:$PATH"
+#export PATH="/Users/richardlam/Library/Python/3.11/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export DOCKER_HOST=unix://Users//$USER/.docker/run/docker.sock
 export GODEBUG=asyncpreemptoff=1
 alias lvl='echo "shell level: " $SHLVL'
 alias dateu='echo && date && date -u && echo'
-alias idc='echo "k8s cluster: " && kubectl config get-contexts | awk "/\*/ {print \$2}" && aws sts get-caller-identity'
+#alias idc='echo "k8s cluster: " && kubectl config get-contexts | awk "/\*/ {print \$2}" && aws sts get-caller-identity'
 alias google='_google'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
+#alias ipa="ifconfig | awk '/^[a-z]/ {interface=\$1} /inet / {print interface, \$2}' | grep -v '127.0.0.1' | sed -E 's/^([^ ]+)/\x1b[1;34m\1\x1b[0m/; s/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\x1b[1;31m\1\x1b[0m/'"
+alias ipa="echo; ifconfig | awk '/^[a-z]/ {interface=\$1} /inet / {print interface, \$2}' | grep -v '127.0.0.1' | sed -E 's/^([^ ]+)/\x1b[1;34m\1\x1b[0m/; s/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/\x1b[1;31m\1\x1b[0m/'; echo"
+
+
 
 function _google() {
     local encoded_query
@@ -71,14 +74,14 @@ alias grep='grep --color=auto'
 autoload -U +X bashcompinit && bashcompinit
 
 # kubectl
-alias k='kubectl'
-source <(kubectl completion zsh)
-alias kgs='f() { kubectl get secret $1 -o json | jq ".data | map_values(@base64d)" };f'
+#alias k='kubectl'
+#source <(kubectl completion zsh)
+#alias kgs='f() { kubectl get secret $1 -o json | jq ".data | map_values(@base64d)" };f'
 
 # velero
-source <(velero completion zsh)
-alias v=velero
-complete -F __start_velero v
+#source <(velero completion zsh)
+#alias v=velero
+#complete -F __start_velero v
 
 # aws
 #complete -C '/usr/local/bin/aws_completer' aws
