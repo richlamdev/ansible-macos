@@ -158,6 +158,7 @@ let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terra
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
 let g:ale_sh_shfmt_options = '-i 2 -ci'
+let g:ale_sh_shellcheck_options = '--exclude=SC2034' " ignore unused shell variables
 
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
