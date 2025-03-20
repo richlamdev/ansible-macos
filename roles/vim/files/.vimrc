@@ -186,6 +186,14 @@ let g:ale_terraform_trivy_linter = {
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" clear ALE highlights
+function! ClearALEHighlights()
+    call ale#highlight#RemoveHighlights()
+    echo "ALE highlights cleared"
+endfunction
+
+nnoremap <silent> <leader>ca :call ClearALEHighlights()<CR>
 " }}}
 
 " indentLine {{{
