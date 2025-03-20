@@ -294,8 +294,8 @@ nnoremap <Leader>r :Rg<cr>
 nnoremap <Leader>a :Ag<cr>
 nnoremap <Leader>mk :Marks<cr>
 nnoremap <Leader>ma :Maps<cr>
-nnoremap <Leader>c :Changes<cr>
-nnoremap <Leader>l :Lines<cr>
+nnoremap <Leader>ch :Changes<cr>
+nnoremap <Leader>li :Lines<cr>
 " }}}
 
 " vimgrep & grep{{{
@@ -345,6 +345,12 @@ nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<cr>
 
 " tree view from current working directory
 nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
+
+" clear search
+nnoremap <Leader>no :noh<cr>
+
+" show all leader mapped keys
+nnoremap <Leader>ml :map <Leader><cr>
 " }}}
 
 " vimrc {{{
@@ -355,7 +361,7 @@ nnoremap ,u :source $MYVIMRC<cr> :edit $MYVIMRC<cr>
 
 " sudo write {{{
 " Save a file with sudo (sw => sudo write)
-noremap <leader>sw :w !sudo tee % > /dev/null<CR>
+nnoremap <leader>sw :w !sudo tee % > /dev/null<CR>
 " }}}
 "
 " view/paste register {{{
