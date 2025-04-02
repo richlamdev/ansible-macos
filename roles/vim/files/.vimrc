@@ -193,7 +193,7 @@ function! ClearALEHighlights()
     echo "ALE highlights cleared"
 endfunction
 
-nnoremap <silent> <leader>ca :call ClearALEHighlights()<CR>
+nnoremap <silent> <leader>ca :call ClearALEHighlights()<CR>:noh<CR>
 " }}}
 
 " indentLine {{{
@@ -255,6 +255,8 @@ function! SetStatusLine()
 
     set statusline+=\%=                " separator point left/right of statusline
 
+    set statusline+=%1*                " set to User3 color
+    set statusline+=\search:\ %{searchcount().current}/%{searchcount().total}
     set statusline+=%7*                " set to User7 color
     set statusline+=\row:%l/%L         " line number / line total
     set statusline+=%4*
@@ -321,8 +323,8 @@ nnoremap <silent> <leader>g :Grep <c-r>=expand("<cWORD>")<cr><cr>
 nnoremap <leader>n :NERDTreeToggle<cr>
 
 let NERDShutUp = 1
-let NERDTreeHijackNetrw=1
-let NERDTreeQuitOnOpen=1               " quit NERDTree after openning a file
+let NERDTreeHijackNetrw = 1
+let NERDTreeQuitOnOpen = 1             " quit NERDTree after openning a file
 let NERDChristmasTree = 1              " colored NERD Tree
 let NERDTreeHighlightCursorline = 1
 let NERDTreeShowHidden = 1
@@ -353,12 +355,6 @@ nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<cr>
 
 " tree view from current working directory
 nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
-
-" clear search
-nnoremap <Leader>no :noh<cr>
-
-" show all leader mapped keys
-nnoremap <Leader>ml :map <Leader><cr>
 " }}}
 
 " vimrc {{{
