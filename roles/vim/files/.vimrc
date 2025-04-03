@@ -22,7 +22,7 @@ set backspace=indent,eol,start        " allow backspacing over everything in ins
 set number                            " set numbered lines for columns
 set list                              " show all whitespace a character
 set listchars=tab:▸\ ,trail:·,nbsp:␣  " set characters displayed for tab/space
-set mouse=a                           " enable mouse for all modes
+"set mouse=a                           " enable mouse for all modes
 set scrolloff=1                       " set number of context lines visible above & below cursor
 set sidescrolloff=5                   " make vertical scrolling appear more natural
 set noerrorbells                      " disable beep on errors
@@ -155,24 +155,16 @@ autocmd FileType markdown,json
 " https://github.com/dense-analysis/ale
 let g:ale_linters = {'json': ['jq'], 'python': ['ruff', 'bandit'], 'sh': ['shellcheck'], 'yaml': ['yamllint'], 'terraform': ['trivy']}
 let g:ale_fixers = {'json': ['jq'], 'python': ['black'], 'sh': ['shfmt'], 'terraform': ['terraform'] }
+
 let g:ale_python_flake8_options = '--max-line-length 79'
 let g:ale_python_black_options = '--line-length 79'
+
 let g:ale_sh_shfmt_options = '-i 2 -ci'
 let g:ale_sh_shellcheck_options = '--exclude=SC2034' " ignore unused shell variables
 
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'never'
-
-" don't worry about long line length for yaml
+" ignore long line length for yaml
 let g:ale_yaml_yamllint_options = '-d "{extends: relaxed, rules: {line-length: {max: disable}}"'
 
-let g:ale_terraform_trivy_executable = 'trivy'
 let g:ale_terraform_trivy_options = 'config --exit-code 0'
 let g:ale_terraform_trivy_use_global = 1
 let g:ale_terraform_trivy_linter = {
@@ -184,13 +176,22 @@ let g:ale_terraform_trivy_linter = {
     \ 'language': 'terraform',
     \ }
 
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'never'
+
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
-" clear ALE highlights
+" clear ALE and search highlights
 function! ClearALEHighlights()
     call ale#highlight#RemoveHighlights()
-    echo "ALE highlights cleared"
+    echo "ALE and search highlights cleared"
 endfunction
 
 nnoremap <silent> <leader>ca :call ClearALEHighlights()<CR>:noh<CR>
@@ -255,7 +256,7 @@ function! SetStatusLine()
 
     set statusline+=\%=                " separator point left/right of statusline
 
-    set statusline+=%1*                " set to User3 color
+    set statusline+=%1*                " set to User1 color
     set statusline+=\search:\ %{searchcount().current}/%{searchcount().total}
     set statusline+=%7*                " set to User7 color
     set statusline+=\row:%l/%L         " line number / line total
