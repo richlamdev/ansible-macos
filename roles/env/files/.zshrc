@@ -1,5 +1,8 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# eval "$(pyenv init --path)"   # Sets up PATH for login shells
+# eval "$(pyenv init -)"
+
 # Created by `pipx` on 2024-10-24 21:57:28
 export PATH="$PATH:${HOME}/local/bin"
 # paths and aliases preferences
@@ -121,53 +124,41 @@ export FZF_ALT_C_OPTS="
   --walker-skip .git,node_modules,target
   --preview 'tree -C {}'"
 
-# this function obtained from:
-# https://thevaluable.dev/practical-guide-fzf-example/
 function se {
-    if [ -z "$1" ]; then
-        search_folder="$HOME"
-    else
-        search_folder="$1"
-    fi
+    local search_folder="${1:-$HOME}"
 
-    #find_params="-type d \( -name Library -o -name Music -o -name Movies \) -prune -o -print "
-    #selection=$(find "$search_folder" "$find_params" | fzf --multi --height=80% --border=sharp \
+    # Define the find commands
+    local find_dirs="find \"$search_folder\" \
+        -type d \( -name 'Library' -o -name 'Music' -o -name 'Movies' -o -name '.Trash' -o -name 'Applications' -o -path '*/.*' \) -prune -o \
+        -type d -print"
 
-    selection=$(find "$search_folder" -type d \( -name "Library" -o -name "Music" -o -name "Movies" -o -name ".Trash" \) -prune -o -print | fzf --multi --height=80% --border=sharp \
-        --preview='tree -C {}' --preview-window='50%' \
+    local find_files="find \"$search_folder\" \
+        -type d \( -name 'Library' -o -name 'Music' -o -name 'Movies' -o -name '.Trash' -o -name 'Applications' -o -path '*/.*' \) -prune -o \
+        -type f -print"
+
+    local selection
+    selection=$(eval "$find_dirs" | fzf --multi --height=80% --border=sharp \
+        --preview='if [ -d {} ]; then tree -C {}; else bat -n --color=always {} 2>/dev/null || cat {}; fi' \
+        --preview-window='50%' \
         --prompt='Dirs > ' \
-        --bind='del:execute(rm -ri {+})' \
+        --bind="ctrl-d:change-prompt(Dirs > )+reload($find_dirs)" \
+        --bind="ctrl-f:change-prompt(Files > )+reload($find_files)" \
         --bind='ctrl-p:toggle-preview' \
-        --bind='ctrl-d:change-prompt(Dirs > )' \
-        --bind="ctrl-d:+reload(find $search_folder -type d \( -name \"Library\" -o -name \"Music\" -o -name \"Movies\" \) -prune -o -print )" \
-        --bind='ctrl-d:+change-preview(tree -C {})' \
-        --bind='ctrl-d:+refresh-preview' \
-        --bind='ctrl-f:change-prompt(Files > )' \
-        --bind="ctrl-f:+reload(find $search_folder -type d \( -name \"Library\" -o -name \"Music\" -o -name \"Movies\" \) -prune -o -type f -print )" \
-        --bind='ctrl-f:+change-preview(bat --color=always {})' \
-        --bind='ctrl-f:+refresh-preview' \
         --bind='ctrl-a:select-all' \
         --bind='ctrl-x:deselect-all' \
         --color header:italic \
-        --header '
-CTRL-D to display directories
-CTRL-F to display files
-CTRL-A/CTRL-X to select/deselect all
-ENTER to edit | DEL to delete
-CTRL-P to toggle preview
-')
+        --header $'CTRL-D: directories | CTRL-F: files | CTRL-A/X: select/deselect all
+ENTER: navigate/edit | DEL: delete | CTRL-P: toggle preview')
+
+    [ -z "$selection" ] && return
 
     if [ -d "$selection" ]; then
         cd "$selection" || return
     elif [ -f "$selection" ]; then
-        # Change to the directory containing the file
         cd "$(dirname "$selection")" || return
     fi
-    # alternatively edit selection via EDITOR
-    # else
-    #     eval "$EDITOR $selection"
-    # fi
 }
+
 
 # Function to pretty-print CSV files
 function pretty_csv {
