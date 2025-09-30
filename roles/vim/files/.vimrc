@@ -22,7 +22,7 @@ set backspace=indent,eol,start        " allow backspacing over everything in ins
 set number                            " set numbered lines for columns
 set list                              " show all whitespace a character
 set listchars=tab:▸\ ,trail:·,nbsp:␣  " set characters displayed for tab/space
-"set mouse=a                           " enable mouse for all modes
+set mouse=a                           " enable mouse for all modes
 set scrolloff=1                       " set number of context lines visible above & below cursor
 set sidescrolloff=5                   " make vertical scrolling appear more natural
 set noerrorbells                      " disable beep on errors
@@ -48,6 +48,7 @@ autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
 set path=.,**              " relative to current file and everything under :pwd
 set wildmenu               " display matches in command-line mode
 set wildignore+=.pyc,.swp  " ignore these files when opening based on glob pattern
+set wildignorecase         " ignore case when completing file names
 set hidden                 " hide buffers when they are abandoned
 " }}}
 
@@ -208,12 +209,6 @@ let g:vim_json_conceal=0
 nnoremap <leader>id :IndentLinesToggle<cr>
 " }}}
 
-" screen settings {{{
-syntax on                  " Vim5 and later versions support syntax highlighting.
-set background=dark        " Enable dark background within editing are and syntax highlighting
-" set termguicolors
-" }}}
-
 " statusline {{{
 function! GitBranch()
   let branch = substitute(system('git rev-parse --abbrev-ref HEAD 2>/dev/null'), '\n', '', '')
@@ -270,6 +265,7 @@ endfunction
 " }}}
 
 " vimwiki {{{
+" https://github.com/vimwiki/vimwiki
 filetype plugin on
 autocmd BufNewFile,BufReadPost,BufAdd *.wiki set filetype=vimwiki
 let g:vimwiki_list = [{'path': '~/backup/git/wiki/',
