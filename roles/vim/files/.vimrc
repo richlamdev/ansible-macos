@@ -7,6 +7,8 @@
 " options, so any other options should be set AFTER setting 'compatible'.
 set nocompatible
 set title                             " set title of window
+set modeline
+set modelines=5
 set titlestring=\ [CWD:\ %{getcwd()}]\ \ \ \ [%t]%a%r%m%h%w%q titlelen=80
 set ttyfast                           " Make the keyboard fast
 "set timeout timeoutlen=1000 ttimeoutlen=50
@@ -30,8 +32,6 @@ set lazyredraw                        " don't redraw while executing macros
 set smoothscroll                      " smooth scrolling
 set updatetime=300                    " set updatetime to 300ms
 set background=dark                   " enable dark background within editing
-"set termguicolors                     " enable true colors
-syntax on                             " enable syntax highlighting.
 
 if has("autocmd")              " Jump to last position when reopening a file
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -184,7 +184,6 @@ let g:ale_lint_on_enter = 0 " if you don't want linters to run on opening a file
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'never'
 
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
@@ -195,7 +194,7 @@ function! ClearALEHighlights()
     echo "ALE and search highlights cleared"
 endfunction
 
-nnoremap <silent> <leader>ca :call ClearALEHighlights()<CR>:noh<CR>
+nnoremap <silent> <leader>ca :noh<CR> :call ClearALEHighlights()<CR> :redraw!<CR>
 " }}}
 
 " indentLine {{{
@@ -290,6 +289,11 @@ augroup StatusLineInit
   autocmd!
   autocmd VimEnter,ColorScheme * call SetStatusLine()
 augroup END
+" }}}
+
+" screen settings {{{
+syntax on
+set background=dark
 " }}}
 
 " vimwiki {{{
