@@ -10,7 +10,7 @@ set title                             " set title of window
 set modeline
 set modelines=5
 set titlestring=\ [CWD:\ %{getcwd()}]\ \ \ \ [%t]%a%r%m%h%w%q titlelen=80
-set ttyfast                           " Make the keyboard fast
+" set ttyfast                           " Make the keyboard fast
 "set timeout timeoutlen=1000 ttimeoutlen=50
 set showmode                          " always show what mode we're currently editing in
 set showcmd                           " Show (partial) command in status line.
@@ -47,9 +47,11 @@ autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
 " file find {{{
 set path=.,**              " relative to current file and everything under :pwd
 set wildmenu               " display matches in command-line mode
+set wildmode=longest:full,full " complete the longest common prefix and show all matches
 set wildignore+=.pyc,.swp  " ignore these files when opening based on glob pattern
 set wildignorecase         " ignore case when completing file names
 set hidden                 " hide buffers when they are abandoned
+set wildoptions=pum
 " }}}
 
 " Python PEP8 {{{
@@ -150,6 +152,11 @@ autocmd FileType markdown,json
     \ setlocal smartindent |
     \ setlocal smarttab |
     \ setlocal foldmethod=manual |
+" }}}
+
+" terraform {{{
+autocmd FileType terraform
+    \ setlocal foldlevelstart=99 |
 " }}}
 
 " ALE {{{
@@ -330,22 +337,41 @@ nnoremap <Leader>s :BLines<cr>
 nnoremap <Leader>w :Windows<cr>
 nnoremap <Leader>j :Jumps<cr>
 nnoremap <Leader>r :Rg<cr>
-nnoremap <Leader>a :Ag<cr>
 nnoremap <Leader>mk :Marks<cr>
 nnoremap <Leader>ma :Maps<cr>
 nnoremap <Leader>ch :Changes<cr>
 nnoremap <Leader>li :Lines<cr>
-" }}}
 
-" vimgrep & grep{{{
-" use :Vim <search_term>
-command! -nargs=+ Vim execute "silent vimgrep! /<args>/gj ##" | copen | execute 'silent /<args>' | redraw!
-nnoremap <silent> <leader>v :Vim <c-r>=expand("<cWORD>")<cr><cr>
+function! s:build_quickfix_list(lines)
+  let l:qf = []
+  for l:line in a:lines
+    let l:parts = split(l:line, ':', 4)
+    call add(l:qf, {
+      \ 'filename': l:parts[0],
+      \ 'lnum': str2nr(l:parts[1]),
+      \ 'col': str2nr(l:parts[2]),
+      \ 'text': l:parts[3],
+      \ })
+  endfor
+  call setqflist(l:qf, 'r')
+  copen
+endfunction
 
-" modified from: https://chase-seibert.github.io/blog/2013/09/21/vim-grep-under-cursor.html
-" use :Grep <search_term>
-command! -nargs=+ Grep execute 'silent grep! -I -i -r -n --exclude=\*.pyc --exclude-dir=.git ## -e <args>' | copen | execute 'silent /<args>' | redraw!
-nnoremap <silent> <leader>g :Grep <c-r>=expand("<cWORD>")<cr><cr>
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-q': function('s:build_quickfix_list') }
+
+" toggle quickfix window
+nnoremap <expr> <leader>q empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
+" clear quickfix list
+nnoremap <leader>cq :call setqflist([], 'r')<CR>
+
+" prepopulate :RG with word under cursor
+nnoremap <leader>g :RG <c-r>=expand("<cWORD>")<cr><cr>
+" shortcut to :Cfilter
+nnoremap <leader>cf :Cfilter /
 " }}}
 
 " nerdtree {{{
@@ -384,6 +410,8 @@ nnoremap <leader>ew :e <C-R>=expand("%:.:h") . "/"<cr>
 
 " tree view from current working directory
 nnoremap <Leader>tr :!clear && echo "Working Directory:" && pwd && tree \| less<cr>
+
+nmap <Space>r :call feedkeys(":Rename " . expand('%@'))<CR>
 " }}}
 
 " vimrc {{{
@@ -396,7 +424,7 @@ nnoremap ,u :source $MYVIMRC<cr> :edit $MYVIMRC<cr>
 " Save a file with sudo (sw => sudo write)
 nnoremap <leader>sw :w !sudo tee % > /dev/null<CR>
 " }}}
-"
+
 " view/paste register {{{
 function! Reg()
     reg
@@ -409,6 +437,15 @@ function! Reg()
 endfunction
 
 command! -nargs=0 Reg call Reg()
+" }}}
+
+" load built-in plugins {{{
+packadd matchit
+packadd cfilter
+
+packadd comment
+" enable line range commenting (similar to vim-commentary)
+command! -range Comment <line1>,<line2>norm gcc
 " }}}
 
 " startup {{{
