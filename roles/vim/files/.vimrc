@@ -47,11 +47,11 @@ autocmd BufWrite * %s/\s\+$//e " Remove trailing whitespace on save
 " file find {{{
 set path=.,**              " relative to current file and everything under :pwd
 set wildmenu               " display matches in command-line mode
-set wildmode=longest:full,full " complete the longest common prefix and show all matches
+"set wildmode=longest:full,full " complete the longest common prefix and show all matches
+set wildoptions=pum        " show a list when pressing tab
 set wildignore+=.pyc,.swp  " ignore these files when opening based on glob pattern
 set wildignorecase         " ignore case when completing file names
 set hidden                 " hide buffers when they are abandoned
-set wildoptions=pum
 " }}}
 
 " Python PEP8 {{{
@@ -440,6 +440,8 @@ command! -nargs=0 Reg call Reg()
 " }}}
 
 " load built-in plugins {{{
+packadd editorconfig
+packadd hlyank
 packadd matchit
 packadd cfilter
 
